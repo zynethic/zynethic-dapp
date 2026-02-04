@@ -22,22 +22,24 @@ export default function Page() {
         body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden; }
         
         /* Layout */
-        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; position: fixed; width: 100%; top: 0; z-index: 1000; background: rgba(1, 4, 9, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); box-sizing: border-box; }
-        .sidebar { position: fixed; left: 0; top: 70px; width: 240px; height: calc(100vh - 70px); background: rgba(1, 4, 9, 0.5); border-right: 1px solid var(--glass-border); padding: 20px; box-sizing: border-box; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; position: fixed; width: 100%; top: 0; z-index: 1000; background: rgba(1, 4, 9, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); box-sizing: border-box; }
+        .sidebar { position: fixed; left: 0; top: 60px; width: 240px; height: calc(100vh - 60px); background: rgba(1, 4, 9, 0.5); border-right: 1px solid var(--glass-border); padding: 20px; box-sizing: border-box; }
         .main-content { margin-left: 240px; padding: 100px 40px 40px; }
 
         /* Components */
-        .nav-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; font-weight: 600; }
+        .nav-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem; }
         .nav-item:hover, .nav-item.active { background: rgba(0, 82, 255, 0.1); color: var(--base-glow); }
         
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
         .card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; backdrop-filter: blur(10px); }
         
-        .badge-coming { font-size: 0.65rem; background: var(--base-blue); color: white; padding: 2px 8px; border-radius: 5px; margin-left: auto; text-transform: uppercase; }
         .status-pill { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; border: 1px solid var(--base-glow); color: var(--base-glow); margin-bottom: 10px; }
         
         .btn-primary { background: var(--base-blue); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; }
         .btn-primary:hover { box-shadow: 0 0 20px rgba(0, 82, 255, 0.4); }
+
+        .tier-card { border: 1px solid var(--glass-border); transition: 0.3s; }
+        .tier-card:hover { border-color: var(--base-glow); transform: translateY(-5px); }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -48,8 +50,11 @@ export default function Page() {
 
       {/* Top Navbar */}
       <nav className="navbar">
-        <div style={{ fontWeight: 800, fontSize: '1.2rem', textTransform: 'uppercase' }}>ZYNE<span style={{ color: '#0052ff' }}>THIC</span></div>
-        <button style={{ background: '#0052ff', border: 'none', color: 'white', padding: '8px 20px', borderRadius: '12px', fontWeight: 700, cursor: 'pointer' }} onClick={() => alert('Connect Wallet via OnchainKit coming soon!')}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" style={{ width: '30px', height: '30px' }} />
+          <div style={{ fontWeight: 800, fontSize: '1.1rem', textTransform: 'uppercase', color: '#ffffff', letterSpacing: '1px' }}>ZYNETHIC</div>
+        </div>
+        <button style={{ background: '#0052ff', border: 'none', color: 'white', padding: '6px 16px', borderRadius: '8px', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }} onClick={() => alert('OnchainKit: Connecting to Base...')}>
           CONNECT WALLET
         </button>
       </nav>
@@ -59,17 +64,20 @@ export default function Page() {
         <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
           <i className="fa-solid fa-chart-line"></i> AI Dashboard
         </div>
-        <div className={`nav-item ${activeTab === 'holder' ? 'active' : ''}`} onClick={() => setActiveTab('holder')}>
-          <i className="fa-solid fa-crown"></i> Holder Access <span className="badge-coming">Lock</span>
+        <div className={`nav-item ${activeTab === 'tiers' ? 'active' : ''}`} onClick={() => setActiveTab('tiers')}>
+          <i className="fa-solid fa-layer-group"></i> Membership Tiers
         </div>
-        <div className={`nav-item ${activeTab === 'staking' ? 'active' : ''}`} onClick={() => setActiveTab('staking')}>
-          <i className="fa-solid fa-vault"></i> Burn & Staking
+        <div className={`nav-item ${activeTab === 'governance' ? 'active' : ''}`} onClick={() => setActiveTab('governance')}>
+          <i className="fa-solid fa-vote-yea"></i> Governance
         </div>
         <div className={`nav-item ${activeTab === 'swap' ? 'active' : ''}`} onClick={() => setActiveTab('swap')}>
           <i className="fa-solid fa-right-left"></i> Direct Swap
         </div>
         <div className={`nav-item ${activeTab === 'leaderboard' ? 'active' : ''}`} onClick={() => setActiveTab('leaderboard')}>
           <i className="fa-solid fa-trophy"></i> Leaderboard
+        </div>
+        <div className={`nav-item ${activeTab === 'burn' ? 'active' : ''}`} onClick={() => setActiveTab('burn')}>
+          <i className="fa-solid fa-fire"></i> Burn Tracker
         </div>
       </div>
 
@@ -94,70 +102,105 @@ export default function Page() {
             <div className="card">
               <h3><i className="fa-solid fa-message"></i> ZNTC AI Chatbot</h3>
               <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '15px', height: '120px', fontSize: '0.85rem', overflowY: 'auto', marginBottom: '15px' }}>
-                <div style={{ marginBottom: '10px', color: '#00f7ff' }}>AI: Hello! Ask me anything about ZYNETHIC Tokenomics or Roadmap.</div>
+                <div style={{ marginBottom: '10px', color: '#00f7ff' }}>AI: Hello! Ask me apapun tentang ZYNETHIC Tokenomics atau Roadmap.</div>
               </div>
               <input type="text" placeholder="Ask AI..." style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white' }} />
             </div>
           </div>
         )}
 
-        {activeTab === 'staking' && (
+        {activeTab === 'tiers' && (
           <div className="grid-container">
-            <div className="card">
-              <h3><i className="fa-solid fa-fire" style={{ color: '#ff4d4d' }}></i> Burn Tracker</h3>
-              <div style={{ fontSize: '2rem', fontWeight: 800, margin: '20px 0' }}>4,000,000 <span style={{ fontSize: '0.9rem', color: '#94a3b8' }}>$ZNTC</span></div>
-              <p style={{ fontSize: '0.8rem' }}>10% of total supply is allocated for systematic deflation.</p>
-              <div style={{ background: '#222', height: '10px', borderRadius: '10px', marginTop: '10px' }}>
-                <div style={{ width: '0%', background: 'linear-gradient(to right, #ff4d4d, #0052ff)', height: '100%', borderRadius: '10px' }}></div>
-              </div>
+            <div className="card tier-card">
+              <div style={{ color: '#cd7f32', fontWeight: 800, fontSize: '0.7rem' }}>BRONZE HOLDER</div>
+              <h3 style={{ margin: '10px 0' }}>10,000+ $ZNTC</h3>
+              <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
+                <li>Basic AI Dashboard</li>
+                <li>Community Badge</li>
+              </ul>
             </div>
-            <div className="card">
-              <h3><i className="fa-solid fa-lock"></i> ZNTC Staking Vault</h3>
-              <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '20px' }}>Lock your $ZNTC to earn AI ecosystem rewards.</p>
-              <div style={{ padding: '15px', border: '1px dashed #0052ff', borderRadius: '10px', textAlign: 'center', color: '#94a3b8' }}>
-                Available after Presale
-              </div>
+            <div className="card tier-card" style={{ boxShadow: '0 0 15px rgba(0, 82, 255, 0.2)' }}>
+              <div style={{ color: '#ffd700', fontWeight: 800, fontSize: '0.7rem' }}>GOLD HOLDER</div>
+              <h3 style={{ margin: '10px 0' }}>50,000+ $ZNTC</h3>
+              <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
+                <li>AI Sentiment Analysis</li>
+                <li>Governance Voting Rights</li>
+                <li>Premium Badge</li>
+              </ul>
+            </div>
+            <div className="card tier-card">
+              <div style={{ color: '#e5e4e2', fontWeight: 800, fontSize: '0.7rem' }}>PLATINUM WHALE</div>
+              <h3 style={{ margin: '10px 0' }}>250,000+ $ZNTC</h3>
+              <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
+                <li>Full AI Engine Access</li>
+                <li>Early Beta Features</li>
+                <li>Elite Identity Badge</li>
+              </ul>
             </div>
           </div>
         )}
 
-        {activeTab === 'holder' && (
+        {activeTab === 'burn' && (
+          <div className="card" style={{ maxWidth: '600px' }}>
+            <h3><i className="fa-solid fa-fire" style={{ color: '#ff4d4d' }}></i> Burn Tracker</h3>
+            <div style={{ fontSize: '2.5rem', fontWeight: 800, margin: '20px 0' }}>4,000,000 <span style={{ fontSize: '0.9rem', color: '#94a3b8' }}>$ZNTC</span></div>
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>10% alokasi suplai akan di-burn secara sistematis untuk meningkatkan kelangkaan token.</p>
+            <div style={{ background: '#222', height: '12px', borderRadius: '10px', marginTop: '20px', overflow: 'hidden' }}>
+              <div style={{ width: '0%', background: 'linear-gradient(90deg, #ff4d4d, #0052ff)', height: '100%' }}></div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', fontSize: '0.7rem', fontWeight: 700 }}>
+              <span>0 BURNED</span>
+              <span>GOAL: 4M</span>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'governance' && (
           <div className="card" style={{ maxWidth: '600px', textAlign: 'center' }}>
             <i className="fa-solid fa-user-shield" style={{ fontSize: '3rem', color: '#0052ff', marginBottom: '20px' }}></i>
-            <h2>Verified Holder Access</h2>
-            <p>Access **Premium Insights** and **Snapshot Governance** by holding at least 50,000 $ZNTC.</p>
+            <h2>Governance Voting</h2>
+            <p style={{ color: '#94a3b8' }}>Hold minimal 50,000 $ZNTC untuk berpartisipasi dalam pengambilan keputusan ekosistem.</p>
             <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '15px', marginTop: '20px' }}>
-               <p style={{ margin: 0, fontWeight: 700 }}>Your Status: <span style={{ color: '#ff4d4d' }}>Not Connected</span></p>
+               <p style={{ margin: 0, fontWeight: 700 }}>Status: <span style={{ color: '#ff4d4d' }}>Wallet Not Connected</span></p>
             </div>
           </div>
         )}
 
-        {/* Tab lainnya bisa ditambahkan polanya sesuai keinginan */}
         {activeTab === 'swap' && (
-          <div className="card" style={{ maxWidth: '450px', margin: '0 auto' }}>
-             <h3>Direct Swap</h3>
-             <div style={{ background: '#000', padding: '15px', borderRadius: '15px', marginBottom: '10px' }}>
+          <div className="card" style={{ maxWidth: '400px', margin: '0 auto' }}>
+             <h3 style={{ textAlign: 'center' }}>Direct Swap</h3>
+             <div style={{ background: '#000', padding: '15px', borderRadius: '15px', marginBottom: '10px', border: '1px solid var(--glass-border)' }}>
                 <label style={{ fontSize: '0.7rem', color: '#94a3b8' }}>From</label>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
-                   <input type="number" placeholder="0.0" style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.2rem', width: '60%' }} />
-                   <span>ETH</span>
+                   <input type="number" placeholder="0.0" style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.2rem', width: '60%', outline: 'none' }} />
+                   <span style={{ fontWeight: 700 }}>ETH</span>
                 </div>
              </div>
-             <div style={{ textAlign: 'center', margin: '10px 0' }}><i className="fa-solid fa-arrow-down"></i></div>
-             <div style={{ background: '#000', padding: '15px', borderRadius: '15px', marginBottom: '20px' }}>
+             <div style={{ textAlign: 'center', margin: '5px 0' }}><i className="fa-solid fa-arrow-down" style={{ color: '#0052ff' }}></i></div>
+             <div style={{ background: '#000', padding: '15px', borderRadius: '15px', marginBottom: '20px', border: '1px solid var(--glass-border)' }}>
                 <label style={{ fontSize: '0.7rem', color: '#94a3b8' }}>To</label>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
                    <input type="number" placeholder="0.0" disabled style={{ background: 'transparent', border: 'none', color: 'white', fontSize: '1.2rem', width: '60%' }} />
-                   <span>$ZNTC</span>
+                   <span style={{ fontWeight: 700 }}>$ZNTC</span>
                 </div>
              </div>
              <button className="btn-primary">Connect Wallet to Swap</button>
           </div>
         )}
+
+        {activeTab === 'leaderboard' && (
+          <div className="card">
+            <h3><i className="fa-solid fa-ranking-star" style={{ color: '#ffd700' }}></i> Top Holders Leaderboard</h3>
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Daftar 100 pemegang $ZNTC teratas. Hold lebih lama untuk mendapatkan Badge khusus.</p>
+            <div style={{ marginTop: '20px', textAlign: 'center', padding: '40px', border: '1px dashed var(--glass-border)', borderRadius: '15px', color: '#444' }}>
+               Data akan tersedia setelah Presale & Listing
+            </div>
+          </div>
+        )}
       </main>
 
-      <footer style={{ position: 'fixed', bottom: 20, right: 40, fontSize: '0.7rem', color: '#444' }}>
-        ZYNETHIC Ecosystem v1.0b - Base Mainnet Verified
+      <footer style={{ position: 'fixed', bottom: 20, right: 40, fontSize: '0.7rem', color: '#444', letterSpacing: '1px' }}>
+        ZYNETHIC ECOSYSTEM 2026 - BUILT ON BASE L2
       </footer>
     </div>
   );
