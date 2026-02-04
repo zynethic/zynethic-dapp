@@ -6,7 +6,7 @@ export default function Page() {
   const [activeTab, setActiveTab] = useState('dashboard');
 
   return (
-    <div style={{ margin: 0, padding: 0, backgroundColor: '#010409', minHeight: '100vh', color: '#f8fafc' }}>
+    <div style={{ margin: 0, padding: 0, backgroundColor: '#010409', minHeight: '100vh', color: '#f8fafc', display: 'flex', flexDirection: 'column' }}>
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
@@ -19,12 +19,12 @@ export default function Page() {
             --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden; background-color: var(--primary-bg); }
         
         /* Layout */
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; position: fixed; width: 100%; top: 0; z-index: 1000; background: rgba(1, 4, 9, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); box-sizing: border-box; }
         .sidebar { position: fixed; left: 0; top: 60px; width: 240px; height: calc(100vh - 60px); background: rgba(1, 4, 9, 0.5); border-right: 1px solid var(--glass-border); padding: 20px; box-sizing: border-box; }
-        .main-content { margin-left: 240px; padding: 100px 40px 40px; }
+        .main-content { margin-left: 240px; padding: 100px 40px 60px; flex-grow: 1; }
 
         /* Components */
         .nav-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem; }
@@ -41,10 +41,16 @@ export default function Page() {
         .tier-card { border: 1px solid var(--glass-border); transition: 0.3s; }
         .tier-card:hover { border-color: var(--base-glow); transform: translateY(-5px); }
 
+        /* Mobile Bottom Nav */
+        .mobile-nav { display: none; position: fixed; bottom: 0; width: 100%; background: rgba(1, 4, 9, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--glass-border); justify-content: space-around; padding: 10px 0; z-index: 1000; }
+        .mobile-nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.65rem; color: #94a3b8; gap: 5px; cursor: pointer; }
+        .mobile-nav-item.active { color: var(--base-glow); }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar { display: none; }
-            .main-content { margin-left: 0; padding: 90px 20px; }
+            .main-content { margin-left: 0; padding: 90px 20px 100px; }
+            .mobile-nav { display: flex; }
         }
       ` }} />
 
@@ -59,7 +65,7 @@ export default function Page() {
         </button>
       </nav>
 
-      {/* Sidebar Navigation */}
+      {/* Sidebar Navigation (Desktop) */}
       <div className="sidebar">
         <div className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
           <i className="fa-solid fa-chart-line"></i> AI Dashboard
@@ -81,6 +87,25 @@ export default function Page() {
         </div>
       </div>
 
+      {/* Mobile Bottom Navigation */}
+      <div className="mobile-nav">
+        <div className={`mobile-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
+          <i className="fa-solid fa-chart-line"></i> Dashboard
+        </div>
+        <div className={`mobile-nav-item ${activeTab === 'tiers' ? 'active' : ''}`} onClick={() => setActiveTab('tiers')}>
+          <i className="fa-solid fa-layer-group"></i> Tiers
+        </div>
+        <div className={`mobile-nav-item ${activeTab === 'swap' ? 'active' : ''}`} onClick={() => setActiveTab('swap')}>
+          <i className="fa-solid fa-right-left"></i> Swap
+        </div>
+        <div className={`mobile-nav-item ${activeTab === 'burn' ? 'active' : ''}`} onClick={() => setActiveTab('burn')}>
+          <i className="fa-solid fa-fire"></i> Burn
+        </div>
+        <div className={`mobile-nav-item ${activeTab === 'governance' ? 'active' : ''}`} onClick={() => setActiveTab('governance')}>
+          <i className="fa-solid fa-vote-yea"></i> Vote
+        </div>
+      </div>
+
       {/* Main Content Area */}
       <main className="main-content">
         <div className="status-pill">PHASE: DEVELOPMENT & PRE-LAUNCH</div>
@@ -97,14 +122,14 @@ export default function Page() {
                 <div style={{ flex: 1, background: '#00f7ff', height: '40%', borderRadius: '5px' }}></div>
                 <div style={{ flex: 1, background: '#0052ff', height: '90%', borderRadius: '5px' }}></div>
               </div>
-              <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>AI analysis indicates a **Bullish** trend for AI+Web3 sector.</p>
+              <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>AI analysis indicates a **Bullish** trend for the AI+Web3 sector.</p>
             </div>
             <div className="card">
               <h3><i className="fa-solid fa-message"></i> ZNTC AI Chatbot</h3>
               <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '15px', height: '120px', fontSize: '0.85rem', overflowY: 'auto', marginBottom: '15px' }}>
-                <div style={{ marginBottom: '10px', color: '#00f7ff' }}>AI: Hello! Ask me apapun tentang ZYNETHIC Tokenomics atau Roadmap.</div>
+                <div style={{ marginBottom: '10px', color: '#00f7ff' }}>AI: Hello! Ask me anything about ZYNETHIC Tokenomics or Roadmap.</div>
               </div>
-              <input type="text" placeholder="Ask AI..." style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white' }} />
+              <input type="text" placeholder="Ask AI..." style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white', boxSizing: 'border-box' }} />
             </div>
           </div>
         )}
@@ -115,8 +140,8 @@ export default function Page() {
               <div style={{ color: '#cd7f32', fontWeight: 800, fontSize: '0.7rem' }}>BRONZE HOLDER</div>
               <h3 style={{ margin: '10px 0' }}>10,000+ $ZNTC</h3>
               <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
-                <li>Basic AI Dashboard</li>
-                <li>Community Badge</li>
+                <li>Basic AI Dashboard Access</li>
+                <li>Community Loyalty Badge</li>
               </ul>
             </div>
             <div className="card tier-card" style={{ boxShadow: '0 0 15px rgba(0, 82, 255, 0.2)' }}>
@@ -125,7 +150,7 @@ export default function Page() {
               <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
                 <li>AI Sentiment Analysis</li>
                 <li>Governance Voting Rights</li>
-                <li>Premium Badge</li>
+                <li>Premium Holder Badge</li>
               </ul>
             </div>
             <div className="card tier-card">
@@ -133,7 +158,7 @@ export default function Page() {
               <h3 style={{ margin: '10px 0' }}>250,000+ $ZNTC</h3>
               <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
                 <li>Full AI Engine Access</li>
-                <li>Early Beta Features</li>
+                <li>Early Beta Feature Access</li>
                 <li>Elite Identity Badge</li>
               </ul>
             </div>
@@ -144,13 +169,13 @@ export default function Page() {
           <div className="card" style={{ maxWidth: '600px' }}>
             <h3><i className="fa-solid fa-fire" style={{ color: '#ff4d4d' }}></i> Burn Tracker</h3>
             <div style={{ fontSize: '2.5rem', fontWeight: 800, margin: '20px 0' }}>4,000,000 <span style={{ fontSize: '0.9rem', color: '#94a3b8' }}>$ZNTC</span></div>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>10% alokasi suplai akan di-burn secara sistematis untuk meningkatkan kelangkaan token.</p>
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>10% of total supply is allocated for systematic deflation to increase scarcity.</p>
             <div style={{ background: '#222', height: '12px', borderRadius: '10px', marginTop: '20px', overflow: 'hidden' }}>
               <div style={{ width: '0%', background: 'linear-gradient(90deg, #ff4d4d, #0052ff)', height: '100%' }}></div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', fontSize: '0.7rem', fontWeight: 700 }}>
               <span>0 BURNED</span>
-              <span>GOAL: 4M</span>
+              <span>GOAL: 4,000,000</span>
             </div>
           </div>
         )}
@@ -159,7 +184,7 @@ export default function Page() {
           <div className="card" style={{ maxWidth: '600px', textAlign: 'center' }}>
             <i className="fa-solid fa-user-shield" style={{ fontSize: '3rem', color: '#0052ff', marginBottom: '20px' }}></i>
             <h2>Governance Voting</h2>
-            <p style={{ color: '#94a3b8' }}>Hold minimal 50,000 $ZNTC untuk berpartisipasi dalam pengambilan keputusan ekosistem.</p>
+            <p style={{ color: '#94a3b8' }}>Hold at least 50,000 $ZNTC to participate in ecosystem decision-making.</p>
             <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '15px', marginTop: '20px' }}>
                <p style={{ margin: 0, fontWeight: 700 }}>Status: <span style={{ color: '#ff4d4d' }}>Wallet Not Connected</span></p>
             </div>
@@ -191,17 +216,18 @@ export default function Page() {
         {activeTab === 'leaderboard' && (
           <div className="card">
             <h3><i className="fa-solid fa-ranking-star" style={{ color: '#ffd700' }}></i> Top Holders Leaderboard</h3>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Daftar 100 pemegang $ZNTC teratas. Hold lebih lama untuk mendapatkan Badge khusus.</p>
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Top 100 $ZNTC holders. Long-term holders receive special digital badges.</p>
             <div style={{ marginTop: '20px', textAlign: 'center', padding: '40px', border: '1px dashed var(--glass-border)', borderRadius: '15px', color: '#444' }}>
-               Data akan tersedia setelah Presale & Listing
+               Data will be available after Presale & Listing
             </div>
           </div>
         )}
+        
+        {/* Footer Area (In-flow) */}
+        <div style={{ marginTop: '60px', paddingBottom: '20px', textAlign: 'center', fontSize: '0.7rem', color: '#444', letterSpacing: '1px' }}>
+          ZYNETHIC ECOSYSTEM 2026 - BUILT ON BASE L2
+        </div>
       </main>
-
-      <footer style={{ position: 'fixed', bottom: 20, right: 40, fontSize: '0.7rem', color: '#444', letterSpacing: '1px' }}>
-        ZYNETHIC ECOSYSTEM 2026 - BUILT ON BASE L2
-      </footer>
     </div>
   );
 }
