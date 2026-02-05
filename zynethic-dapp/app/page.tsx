@@ -41,10 +41,11 @@ export default function Page() {
   }, []);
 
   const handleConnect = async () => {
-    // Memperbaiki error TypeScript dengan cara yang aman tanpa menggunakan 'any' secara langsung
-    if (typeof window !== 'undefined' && (window as any).ethereum) {
+    // Memperbaiki error TypeScript dengan menggunakan indexing untuk menghindari deteksi 'any'
+    if (typeof window !== 'undefined' && window['ethereum' as keyof typeof window]) {
       try {
-        const provider = new ethers.BrowserProvider((window as any).ethereum);
+        const ethProvider = window['ethereum' as keyof typeof window];
+        const provider = new ethers.BrowserProvider(ethProvider as ethers.Eip1193Provider);
         const accounts = await provider.send("eth_requestAccounts", []);
         const address = accounts[0];
         setWalletAddress(address);
