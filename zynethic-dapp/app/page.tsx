@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react'; // useRef dihapus
 import { ethers } from 'ethers'; 
 import { getRealBalance, fetchLivePrice } from '@/lib/calls';
 
@@ -12,9 +12,8 @@ export default function Page() {
   const [sentiment, setSentiment] = useState({ value: 0, label: 'Analyzing...' });
   const [livePrice, setLivePrice] = useState('0.0000');
   const [lastActivity, setLastActivity] = useState({addr: '0x00...000', amount: 'Waiting...'});
-  const [isChatOpen, setIsChatOpen] = useState(false); // State untuk Floating AI
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
-  // 1. Fetch Data Riil
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,18 +36,19 @@ export default function Page() {
     return () => clearInterval(interval);
   }, []);
 
-  // 2. Koneksi Wallet Riil
   const handleConnect = async () => {
-    if (typeof window !== 'undefined' && (window as any).ethereum) {
+    // Penanganan tipe data window yang aman untuk TypeScript
+    const { ethereum } = window as unknown as { ethereum: any };
+    
+    if (typeof window !== 'undefined' && ethereum) {
       try {
-        const provider = new ethers.BrowserProvider((window as any).ethereum);
+        const provider = new ethers.BrowserProvider(ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
         const address = accounts[0];
         
         setWalletAddress(address);
         setIsConnected(true);
         
-        // Ambil saldo asli dari Blockchain Base
         const balance = await getRealBalance(address);
         setUserBalance(balance);
         
@@ -81,17 +81,13 @@ export default function Page() {
         .btn-primary { background: var(--base-blue); color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; }
         .status-pill { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; border: 1px solid var(--base-glow); color: var(--base-glow); margin-bottom: 10px; }
         .locked-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 4, 9, 0.85); backdrop-filter: blur(4px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; text-align: center; }
-        
-        /* Floating AI Assistant Styles */
         .ai-fab { position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: var(--base-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 0 20px rgba(0, 82, 255, 0.5); z-index: 2000; transition: 0.3s; border: 2px solid var(--base-glow); }
         .ai-fab:hover { transform: scale(1.1); }
         .ai-chat-box { position: fixed; bottom: 100px; right: 30px; width: 350px; height: 450px; background: var(--primary-bg); border: 1px solid var(--glass-border); border-radius: 20px; z-index: 2000; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-bottom: 4px solid var(--base-blue); }
         .ai-chat-header { background: rgba(0, 82, 255, 0.1); padding: 15px; font-weight: 800; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; }
-        
         @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; padding: 90px 20px 100px; } .ai-chat-box { width: 90%; right: 5%; bottom: 80px; } }
       ` }} />
 
-      {/* Floating AI Assistant */}
       <div className="ai-fab" onClick={() => setIsChatOpen(!isChatOpen)}>
         <i className={`fa-solid ${isChatOpen ? 'fa-xmark' : 'fa-robot'}`}></i>
       </div>
@@ -113,7 +109,6 @@ export default function Page() {
         </div>
       )}
 
-      {/* Konten tetap sama (Nav, Sidebar, Main) */}
       <nav className="navbar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" style={{ width: '30px', height: '30px' }} />
@@ -162,7 +157,6 @@ export default function Page() {
           </div>
         )}
 
-        {/* Tab lainnya tetap sesuai desain Anda */}
         {activeTab === 'swap' && (
           <div className="card" style={{ maxWidth: '400px', margin: '0 auto' }}>
              <h3 style={{ textAlign: 'center' }}>Direct Swap (Base)</h3>
