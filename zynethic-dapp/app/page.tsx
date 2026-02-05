@@ -67,6 +67,12 @@ export default function Page() {
         .mobile-nav-item.active { color: var(--base-glow); }
         .locked-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 4, 9, 0.8); backdrop-filter: blur(4px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; text-align: center; padding: 20px; box-sizing: border-box; }
 
+        /* Style Tambahan untuk Tabel Prediksi AI */
+        .ai-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .ai-table th { text-align: left; color: #94a3b8; font-size: 0.7rem; padding: 10px; border-bottom: 1px solid var(--glass-border); }
+        .ai-table td { padding: 12px 10px; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .trend-up { color: #00f7ff; font-weight: 800; }
+
         @media (max-width: 768px) {
             .sidebar { display: none; }
             .main-content { margin-left: 0; padding: 90px 20px 100px; }
@@ -113,41 +119,88 @@ export default function Page() {
         <p style={{ color: '#94a3b8', marginBottom: '30px' }}>Global AI Community Portal on Base Mainnet.</p>
 
         {activeTab === 'dashboard' && (
-          <div className="grid-container">
-            {/* Fitur 1: AI Sentiment Dashboard (Locked for Gold) */}
-            <div className="card">
-              <h3><i className="fa-solid fa-gauge-high" style={{ color: '#00f7ff' }}></i> AI Market Sentiment</h3>
-              <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--base-glow)' }}>{sentiment.value}</div>
-                <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{sentiment.label.toUpperCase()}</div>
-              </div>
-              <div style={{ background: '#222', height: '8px', borderRadius: '10px', overflow: 'hidden' }}>
-                <div style={{ width: `${sentiment.value}%`, background: 'var(--base-blue)', height: '100%' }}></div>
-              </div>
-              {!hasAccess(50000) && (
-                <div className="locked-overlay">
-                   <i className="fa-solid fa-lock" style={{ fontSize: '1.5rem', marginBottom: '10px', color: 'var(--base-glow)' }}></i>
-                   <p style={{ fontSize: '0.75rem', fontWeight: 700 }}>GOLD TIER REQUIRED</p>
-                   <p style={{ fontSize: '0.65rem', color: '#94a3b8' }}>Hold 50,000 $ZNTC to unlock AI Market Prediction</p>
+          <>
+            <div className="grid-container">
+              {/* Fitur 1: AI Sentiment Dashboard */}
+              <div className="card">
+                <h3><i className="fa-solid fa-gauge-high" style={{ color: '#00f7ff' }}></i> AI Market Sentiment</h3>
+                <div style={{ textAlign: 'center', padding: '20px 0' }}>
+                  <div style={{ fontSize: '3rem', fontWeight: 800, color: 'var(--base-glow)' }}>{sentiment.value}</div>
+                  <div style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{sentiment.label.toUpperCase()}</div>
                 </div>
-              )}
+                <div style={{ background: '#222', height: '8px', borderRadius: '10px', overflow: 'hidden' }}>
+                  <div style={{ width: `${sentiment.value}%`, background: 'var(--base-blue)', height: '100%' }}></div>
+                </div>
+                {!hasAccess(50000) && (
+                  <div className="locked-overlay">
+                    <i className="fa-solid fa-lock" style={{ fontSize: '1.5rem', marginBottom: '10px', color: 'var(--base-glow)' }}></i>
+                    <p style={{ fontSize: '0.75rem', fontWeight: 700 }}>GOLD TIER REQUIRED</p>
+                    <p style={{ fontSize: '0.65rem', color: '#94a3b8' }}>Hold 50,000 $ZNTC to unlock</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Fitur 2: Chatbot */}
+              <div className="card">
+                <h3><i className="fa-solid fa-robot"></i> ZNTC AI Assistant</h3>
+                <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '15px', height: '100px', fontSize: '0.8rem', marginBottom: '10px' }}>
+                  AI: Welcome. Connect your wallet to start the decentralized AI session.
+                </div>
+                <input type="text" placeholder="Type a message..." disabled={!hasAccess(10000)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white', boxSizing: 'border-box' }} />
+                {!hasAccess(10000) && (
+                  <div className="locked-overlay">
+                    <i className="fa-solid fa-key" style={{ fontSize: '1.5rem', marginBottom: '10px', color: 'var(--base-glow)' }}></i>
+                    <p style={{ fontSize: '0.75rem', fontWeight: 700 }}>BRONZE TIER REQUIRED</p>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Fitur 2: Chatbot (Locked for Bronze) */}
-            <div className="card">
-              <h3><i className="fa-solid fa-robot"></i> ZNTC AI Assistant</h3>
-              <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '15px', height: '100px', fontSize: '0.8rem', marginBottom: '10px' }}>
-                AI: Welcome. Connect your wallet to start the decentralized AI session.
-              </div>
-              <input type="text" placeholder="Type a message..." disabled={!hasAccess(10000)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white', boxSizing: 'border-box' }} />
-              {!hasAccess(10000) && (
+            {/* FITUR TERBARU: AI Market Predictor (Base Network) */}
+            <div className="card" style={{ marginTop: '20px' }}>
+              <h3><i className="fa-solid fa-brain" style={{ color: '#00f7ff', marginRight: '10px' }}></i> AI Market Predictor (Base Network)</h3>
+              <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '15px' }}>Top trending assets on Base Mainnet analyzed by ZYNETHIC AI.</p>
+              
+              <table className="ai-table">
+                <thead>
+                  <tr>
+                    <th>TOKEN</th>
+                    <th>AI SCORE</th>
+                    <th>SIGNAL</th>
+                    <th>OUTLOOK</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" style={{width:'14px', marginRight:'5px'}}/> $ZNTC</td>
+                    <td>94/100</td>
+                    <td className="trend-up">STRONG BUY</td>
+                    <td>Accumulation Stage</td>
+                  </tr>
+                  <tr>
+                    <td>🔵 ETH (Base)</td>
+                    <td>78/100</td>
+                    <td className="trend-up">BUY</td>
+                    <td>Steady Growth</td>
+                  </tr>
+                  <tr>
+                    <td>🥥 BRETT</td>
+                    <td>62/100</td>
+                    <td style={{color: '#94a3b8'}}>NEUTRAL</td>
+                    <td>Consolidating</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {!hasAccess(50000) && (
                 <div className="locked-overlay">
-                   <i className="fa-solid fa-key" style={{ fontSize: '1.5rem', marginBottom: '10px', color: 'var(--base-glow)' }}></i>
-                   <p style={{ fontSize: '0.75rem', fontWeight: 700 }}>BRONZE TIER REQUIRED</p>
+                  <i className="fa-solid fa-microchip" style={{ fontSize: '1.5rem', marginBottom: '10px', color: 'var(--base-glow)' }}></i>
+                  <p style={{ fontSize: '0.8rem', fontWeight: 800 }}>AI PREDICTOR LOCKED</p>
+                  <p style={{ fontSize: '0.65rem', color: '#94a3b8' }}>Requires 50,000 $ZNTC (Gold Tier)</p>
                 </div>
               )}
             </div>
-          </div>
+          </>
         )}
 
         {activeTab === 'tiers' && (
@@ -164,7 +217,7 @@ export default function Page() {
               <div style={{ color: '#ffd700', fontWeight: 800, fontSize: '0.7rem' }}>GOLD HOLDER</div>
               <h3 style={{ margin: '10px 0' }}>50,000+ $ZNTC</h3>
               <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
-                <li>AI Sentiment Analysis</li>
+                <li>AI Sentiment & Predictor</li>
                 <li>Governance Voting Rights</li>
                 <li>Revenue Share (Coming Soon)</li>
               </ul>
@@ -172,7 +225,6 @@ export default function Page() {
           </div>
         )}
 
-        {/* Swap, Burn, Governance tetap secara layout, namun sekarang tombolnya responsif terhadap isConnected */}
         {activeTab === 'swap' && (
           <div className="card" style={{ maxWidth: '400px', margin: '0 auto' }}>
              <h3 style={{ textAlign: 'center' }}>Direct Swap</h3>
