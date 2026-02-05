@@ -81,12 +81,12 @@ export default function Page() {
         body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden; background-color: var(--primary-bg); }
         
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 4%; position: fixed; width: 100%; top: 0; z-index: 1000; background: rgba(1, 4, 9, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); box-sizing: border-box; }
-        .nav-center-wrapper { display: flex; flex: 1; justify-content: center; }
-        .nav-links-desktop { display: flex; gap: 20px; }
+        .nav-center-wrapper { position: absolute; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; align-items: center; }
+        .nav-links-desktop { display: flex; gap: 10px; }
         
         .main-content { padding: 100px 40px 60px; flex-grow: 1; display: flex; flex-direction: column; width: 100%; box-sizing: border-box; }
         
-        .nav-item { padding: 8px 12px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.85rem; }
+        .nav-item { padding: 8px 12px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
         .nav-item:hover, .nav-item.active { background: rgba(0, 82, 255, 0.1); color: var(--base-glow); }
         
         .swap-container { background: var(--pancake-bg); border-radius: 24px; padding: 20px; width: 100%; max-width: 420px; margin: 0 auto; border: 1px solid var(--glass-border); box-shadow: 0px 4px 20px rgba(0,0,0,0.5); }
@@ -130,7 +130,7 @@ export default function Page() {
       ` }} />
 
       <nav className="navbar">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 'fit-content' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: '150px' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" style={{ width: '28px', height: '28px' }} />
           <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', letterSpacing: '0.5px' }}>ZYNETHIC</div>
@@ -142,15 +142,18 @@ export default function Page() {
           </div>
         </div>
 
-        <button className="btn-primary btn-connect" style={{ minWidth: 'fit-content' }} onClick={handleConnect}>
-          {isConnected ? `${userBalance.toLocaleString()} $ZNTC` : 'CONNECT WALLET'}
-        </button>
+        <div style={{ minWidth: '150px', display: 'flex', justifyContent: 'flex-end' }}>
+          <button className="btn-primary btn-connect" onClick={handleConnect}>
+            {isConnected ? `${userBalance.toLocaleString()} $ZNTC` : 'CONNECT WALLET'}
+          </button>
+        </div>
       </nav>
 
       <div className="mobile-menu">
         <NavItems />
       </div>
 
+      {/* SISA KODE TETAP SAMA SEPERTI SEBELUMNYA */}
       <div className="ai-fab" onClick={() => setIsChatOpen(!isChatOpen)}>
         <i className={`fa-solid ${isChatOpen ? 'fa-xmark' : 'fa-robot'}`}></i>
       </div>
