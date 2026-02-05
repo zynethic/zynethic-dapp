@@ -66,7 +66,6 @@ export default function Page() {
         .trend-up { color: #00f7ff; font-weight: 800; }
         .footer { margin-top: auto; padding: 40px 0 20px; text-align: center; font-size: 0.7rem; color: #444; letter-spacing: 1px; }
 
-        /* Real-time Activity Feed Animation */
         @keyframes pulse-glow { 0% { opacity: 0.5; } 50% { opacity: 1; color: var(--base-glow); } 100% { opacity: 0.5; } }
         .live-dot { height: 8px; width: 8px; background-color: #00ff88; border-radius: 50%; display: inline-block; margin-right: 8px; animation: pulse-glow 2s infinite; }
         
@@ -111,14 +110,12 @@ export default function Page() {
         <div className="status-pill">PHASE: DEVELOPMENT & PRE-LAUNCH</div>
         <h1 style={{ margin: '0 0 10px 0', fontSize: '2rem' }}>ZYNETHIC COMMAND CENTER</h1>
         
-        {/* Fitur 3: Real-time Activity Feed */}
         <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.7rem', color: '#94a3b8', marginBottom: '20px' }}>
           <span className="live-dot"></span> LIVE ACTIVITY: <span style={{ marginLeft: '5px', color: '#fff' }}>0x71... purchased 2,500 $ZNTC on Base Mainnet</span>
         </div>
 
         {activeTab === 'dashboard' && (
           <>
-            {/* Row 1: Sentiment & Assistant */}
             <div className="grid-container">
               <div className="card">
                 <h3><i className="fa-solid fa-gauge-high" style={{ color: 'var(--base-glow)' }}></i> AI Market Sentiment</h3>
@@ -126,7 +123,6 @@ export default function Page() {
                   <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--base-glow)' }}>{sentiment.value}</div>
                   <div style={{ color: '#94a3b8', fontSize: '0.7rem' }}>{sentiment.label.toUpperCase()}</div>
                 </div>
-                {/* Fitur 3: Personalized AI Insight */}
                 <p style={{ fontSize: '0.65rem', borderTop: '1px solid var(--glass-border)', paddingTop: '10px', color: '#94a3b8' }}>
                   <i className="fa-solid fa-wand-magic-sparkles"></i> AI Insight: Your Base portfolio is outperforming 78% of users today.
                 </p>
@@ -143,20 +139,18 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Fitur 10: Dexscreener Chart Simulation */}
             <div className="card" style={{ marginTop: '20px', height: '400px' }}>
                 <h3><i className="fa-solid fa-chart-area" style={{ color: '#0052ff' }}></i> $ZNTC Price Tracker (Simulated)</h3>
-                <div style={{ width: '100%', height: '90%', borderRadius: '12px', background: '#000', marginTop: '10px', display: 'flex', alignItems: 'center', justifyCenter: 'center', position: 'relative' }}>
+                <div style={{ width: '100%', height: '90%', borderRadius: '12px', background: '#000', marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                     <div style={{ padding: '20px', textAlign: 'center', width: '100%' }}>
                         <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>DEXSCREENER API LINKED (PENDING LAUNCH)</p>
-                        <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnNnd2h6b3NqbmpsZ2Z0ZzVxdzZzdzZzdzZzdzZzdzZzdzZzJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxxS06LzZ9S/giphy.gif" style={{ height: '150px', opacity: 0.3 }} />
+                        <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnNnd2h6b3NqbmpsZ2Z0ZzVxdzZzdzZzdzZzdzZzdzZzdzZzJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxxS06LzZ9S/giphy.gif" alt="Chart Loading" style={{ height: '150px', opacity: 0.3 }} />
                         <p style={{ color: 'var(--base-glow)', fontWeight: 800 }}>CHART WILL APPEAR AT LAUNCH</p>
                     </div>
                 </div>
             </div>
 
             <div className="grid-container">
-              {/* Fitur 1: Auto-Compounding AI */}
               <div className="card">
                 <h3><i className="fa-solid fa-microchip" style={{ color: '#00ff88' }}></i> Auto-Compounding AI</h3>
                 <p style={{ fontSize: '0.7rem', color: '#94a3b8' }}>AI delegates yield farming on Aerodrome/Uniswap.</p>
@@ -164,7 +158,6 @@ export default function Page() {
                 {!hasAccess(100000) && <div className="locked-overlay"><p style={{ fontSize: '0.75rem' }}>AGENT ACCESS (100K+ $ZNTC)</p></div>}
               </div>
 
-              {/* Fitur 8: Base Security Scan AI */}
               <div className="card">
                 <h3><i className="fa-solid fa-shield-halved" style={{ color: '#ff4d4d' }}></i> Base Security Scan AI</h3>
                 <input type="text" placeholder="Enter contract 0x..." style={{ width: '100%', padding: '8px', background: '#000', border: '1px solid #333', borderRadius: '8px', color: '#fff', fontSize: '0.7rem', marginTop: '10px' }} />
@@ -174,7 +167,6 @@ export default function Page() {
             </div>
 
             <div className="grid-container">
-              {/* Fitur 9: AI News Aggregator */}
               <div className="card">
                 <h3><i className="fa-solid fa-newspaper"></i> Base AI News Hub</h3>
                 <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '10px' }}>
@@ -183,7 +175,6 @@ export default function Page() {
                 </div>
               </div>
 
-              {/* Fitur 11: Base Quest */}
               <div className="card">
                 <h3><i className="fa-solid fa-chess-knight"></i> Daily Base Quests</h3>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', marginTop: '10px' }}>
@@ -193,7 +184,6 @@ export default function Page() {
               </div>
             </div>
 
-            {/* Fitur 5: Heatmap & Fitur 7: Trade Signal */}
             <div className="grid-container">
                 <div className="card">
                     <h3><i className="fa-solid fa-fire" style={{ color: '#ff4d4d' }}></i> Base Ecosystem Heatmap</h3>
@@ -215,11 +205,9 @@ export default function Page() {
         {activeTab === 'governance' && (
           <div className="card">
             <h3><i className="fa-solid fa-vote-yea" style={{ color: 'var(--base-glow)' }}></i> Governance Hub</h3>
-            {/* Fitur 4: Social Governance */}
             <div style={{ background: 'rgba(29, 155, 240, 0.1)', padding: '10px', borderRadius: '10px', marginBottom: '20px', border: '1px solid rgba(29, 155, 240, 0.3)', fontSize: '0.7rem' }}>
                 <i className="fa-brands fa-twitter"></i> <strong>Twitter Sync Active:</strong> Votes are automatically shared to @zynethic.
             </div>
-            {/* Fitur 2: Presale Access */}
             <div style={{ padding: '15px', background: 'rgba(255,255,255,0.05)', borderRadius: '15px', border: '1px solid var(--glass-border)' }}>
               <div className="status-pill" style={{ borderColor: 'var(--base-glow)', color: 'var(--base-glow)' }}>EARLY BIRD ACCESS</div>
               <div style={{ fontWeight: 800, marginBottom: '5px' }}>Presale: AI Launchpad Project #1</div>
@@ -236,7 +224,6 @@ export default function Page() {
             <table className="ai-table">
               <thead><tr><th>RANK</th><th>WALLET</th><th>REPUTATION</th><th>STATUS</th></tr></thead>
               <tbody>
-                {/* Fitur 6: On-chain Verified Badge */}
                 <tr><td>1</td><td>0x71C...a4f</td><td>9,450</td><td><span style={{ color: 'var(--base-blue)', fontSize: '0.6rem' }}><i className="fa-solid fa-circle-check"></i> BASED</span></td></tr>
                 <tr><td>2</td><td>0x3aB...21c</td><td>8,200</td><td><span style={{ color: 'var(--base-blue)', fontSize: '0.6rem' }}><i className="fa-solid fa-circle-check"></i> BASED</span></td></tr>
                 <tr><td>3</td><td>0x9eD...f92</td><td>7,100</td><td>-</td></tr>
@@ -252,7 +239,6 @@ export default function Page() {
               <div style={{ fontSize: '2.5rem', fontWeight: 800, color: '#ff4d4d', margin: '20px 0' }}>4,000,000</div>
               <p style={{ fontSize: '0.7rem', color: '#94a3b8' }}>10% of supply systematically removed.</p>
             </div>
-            {/* Fitur 12: Whale Tracker AI */}
             <div className="card">
                <h3><i className="fa-solid fa-whale"></i> Whale Tracker AI</h3>
                <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '10px' }}>
