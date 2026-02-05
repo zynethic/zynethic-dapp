@@ -41,7 +41,8 @@ export default function Page() {
   }, []);
 
   const handleConnect = async () => {
-    const { ethereum } = window as any;
+    // Memperbaiki error 'any' dengan casting yang aman untuk TypeScript
+    const ethereum = (window as Window & { ethereum?: any }).ethereum;
     if (typeof window !== 'undefined' && ethereum) {
       try {
         const provider = new ethers.BrowserProvider(ethereum);
@@ -116,6 +117,7 @@ export default function Page() {
 
       <nav className="navbar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '180px' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" style={{ width: '28px', height: '28px' }} />
           <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', letterSpacing: '0.5px' }}>ZYNETHIC</div>
         </div>
@@ -211,7 +213,10 @@ export default function Page() {
                 <span className="swap-label">From</span>
                 <div className="swap-input-row">
                   <input type="number" className="swap-input" placeholder="0.0" />
-                  <div className="token-select"><img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" width="20" alt="eth" /> ETH <i className="fa-solid fa-chevron-down" style={{ fontSize: '0.6rem' }}></i></div>
+                  <div className="token-select">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" width="20" alt="eth" /> ETH <i className="fa-solid fa-chevron-down" style={{ fontSize: '0.6rem' }}></i>
+                  </div>
                 </div>
               </div>
               <div style={{ textAlign: 'center', margin: '-15px 0', position: 'relative', zIndex: 2 }}>
@@ -223,7 +228,10 @@ export default function Page() {
                 <span className="swap-label">To</span>
                 <div className="swap-input-row">
                   <input type="number" className="swap-input" placeholder="0.0" readOnly />
-                  <div className="token-select" style={{ background: 'var(--base-blue)' }}><img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" width="20" alt="zntc" /> $ZNTC</div>
+                  <div className="token-select" style={{ background: 'var(--base-blue)' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" width="20" alt="zntc" /> $ZNTC
+                  </div>
                 </div>
               </div>
               <button className="btn-primary" style={{ width: '100%', marginTop: '10px', padding: '15px', borderRadius: '16px' }} onClick={() => isConnected ? window.open(`https://app.uniswap.org/#/swap?outputCurrency=${ZNTC_CONTRACT_ADDRESS}&chain=base`, '_blank') : handleConnect()}>
