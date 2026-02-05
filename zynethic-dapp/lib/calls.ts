@@ -7,13 +7,19 @@ const MINIMAL_ABI = [
   "function decimals() view returns (uint8)"
 ];
 
-export const getRealBalance = async (userAddress: string) => {
-  // Penanganan tipe data window yang aman untuk TypeScript
-  const { ethereum } = window as unknown as { ethereum: any };
+// Interface untuk window agar lolos build
+interface EthereumWindow extends Window {
+  ethereum?: any;
+}
 
-  if (typeof window !== 'undefined' && ethereum) {
+export const getRealBalance = async (userAddress: string) => {
+  if (typeof window === 'undefined') return 0;
+  
+  const customWindow = window as unknown as EthereumWindow;
+
+  if (customWindow.ethereum) {
     try {
-      const provider = new ethers.BrowserProvider(ethereum);
+      const provider = new ethers.BrowserProvider(customWindow.ethereum);
       const contract = new ethers.Contract(ZNTC_CONTRACT_ADDRESS, MINIMAL_ABI, provider);
       const balance = await contract.balanceOf(userAddress);
       const decimals = await contract.decimals();
