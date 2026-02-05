@@ -71,7 +71,7 @@ export default function Page() {
           <i className="fa-solid fa-chart-line"></i> AI Dashboard
         </div>
         <div className={`nav-item ${activeTab === 'tiers' ? 'active' : ''}`} onClick={() => setActiveTab('tiers')}>
-          <i className="fa-solid fa-layer-group"></i> Membership Tiers
+          <i className="fa-solid fa-layer-group"></i> Core Utilities
         </div>
         <div className={`nav-item ${activeTab === 'governance' ? 'active' : ''}`} onClick={() => setActiveTab('governance')}>
           <i className="fa-solid fa-vote-yea"></i> Governance
@@ -93,7 +93,7 @@ export default function Page() {
           <i className="fa-solid fa-chart-line"></i> Dashboard
         </div>
         <div className={`mobile-nav-item ${activeTab === 'tiers' ? 'active' : ''}`} onClick={() => setActiveTab('tiers')}>
-          <i className="fa-solid fa-layer-group"></i> Tiers
+          <i className="fa-solid fa-layer-group"></i> Utilities
         </div>
         <div className={`mobile-nav-item ${activeTab === 'swap' ? 'active' : ''}`} onClick={() => setActiveTab('swap')}>
           <i className="fa-solid fa-right-left"></i> Swap
@@ -109,84 +109,103 @@ export default function Page() {
       {/* Main Content Area */}
       <main className="main-content">
         <div className="status-pill">PHASE: DEVELOPMENT & PRE-LAUNCH</div>
-        <h1 style={{ margin: '0 0 10px 0', fontSize: '2rem' }}>Welcome to ZYNETHIC dApp</h1>
-        <p style={{ color: '#94a3b8', marginBottom: '30px' }}>Global AI Community Portal on Base Mainnet.</p>
-
+        
         {activeTab === 'dashboard' && (
-          <div className="grid-container">
-            <div className="card">
-              <h3><i className="fa-solid fa-brain" style={{ color: '#00f7ff' }}></i> AI Sentiment Analysis</h3>
-              <div style={{ height: '150px', display: 'flex', alignItems: 'flex-end', gap: '10px', padding: '10px 0' }}>
-                <div style={{ flex: 1, background: '#0052ff', height: '60%', borderRadius: '5px' }}></div>
-                <div style={{ flex: 1, background: '#0052ff', height: '80%', borderRadius: '5px' }}></div>
-                <div style={{ flex: 1, background: '#00f7ff', height: '40%', borderRadius: '5px' }}></div>
-                <div style={{ flex: 1, background: '#0052ff', height: '90%', borderRadius: '5px' }}></div>
+          <>
+            <h1 style={{ margin: '0 0 10px 0', fontSize: '2rem' }}>The New Frontier of Intelligence</h1>
+            <p style={{ color: '#94a3b8', marginBottom: '30px', lineHeight: '1.6', maxWidth: '800px' }}>
+              At the intersection of technological evolution and decentralization, ZYNETHIC ($ZNTC) emerges as a catalyst for the AI ecosystem of the future. We believe that AI power must be accessible, developed, and owned by the global community through Web3 infrastructure.
+            </p>
+
+            <div className="grid-container">
+              <div className="card">
+                <h3><i className="fa-solid fa-rocket" style={{ color: '#00f7ff' }}></i> Why ZYNETHIC?</h3>
+                <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: '1.5' }}>
+                  Built on the Base network, ZYNETHIC is designed to be a bridge for innovators, developers, and AI technology supporters worldwide.
+                </p>
               </div>
-              <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>AI analysis indicates a **Bullish** trend for the AI+Web3 sector.</p>
-            </div>
-            <div className="card">
-              <h3><i className="fa-solid fa-message"></i> ZNTC AI Chatbot</h3>
-              <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '15px', height: '120px', fontSize: '0.85rem', overflowY: 'auto', marginBottom: '15px' }}>
-                <div style={{ marginBottom: '10px', color: '#00f7ff' }}>AI: Hello! Ask me anything about ZYNETHIC Tokenomics or Roadmap.</div>
+              <div className="card">
+                <h3><i className="fa-solid fa-bullseye" style={{ color: '#00f7ff' }}></i> Our Mission</h3>
+                <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: '1.5' }}>
+                  Building an ecosystem where every $ZNTC holder becomes part of a long-term journey toward the broader integration of AI and Web3.
+                </p>
               </div>
-              <input type="text" placeholder="Ask AI..." style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white', boxSizing: 'border-box' }} />
             </div>
-          </div>
+
+            <div className="grid-container" style={{ marginTop: '20px' }}>
+              <div className="card">
+                <h3><i className="fa-solid fa-brain" style={{ color: '#00f7ff' }}></i> AI Sentiment Analysis</h3>
+                <div style={{ height: '100px', display: 'flex', alignItems: 'flex-end', gap: '10px', padding: '10px 0' }}>
+                  <div style={{ flex: 1, background: '#0052ff', height: '60%', borderRadius: '5px' }}></div>
+                  <div style={{ flex: 1, background: '#0052ff', height: '80%', borderRadius: '5px' }}></div>
+                  <div style={{ flex: 1, background: '#00f7ff', height: '40%', borderRadius: '5px' }}></div>
+                  <div style={{ flex: 1, background: '#0052ff', height: '90%', borderRadius: '5px' }}></div>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>AI analysis indicates a **Bullish** trend for the AI+Web3 sector.</p>
+              </div>
+              <div className="card">
+                <h3><i className="fa-solid fa-message"></i> ZNTC AI Assistant</h3>
+                <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '15px', height: '80px', fontSize: '0.8rem', overflowY: 'auto', marginBottom: '10px' }}>
+                  <div style={{ color: '#00f7ff' }}>AI: How can I help you build the future of AI today?</div>
+                </div>
+                <input type="text" placeholder="Ask about $ZNTC..." style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white', boxSizing: 'border-box' }} />
+              </div>
+            </div>
+          </>
         )}
 
         {activeTab === 'tiers' && (
-          <div className="grid-container">
-            <div className="card tier-card">
-              <div style={{ color: '#cd7f32', fontWeight: 800, fontSize: '0.7rem' }}>BRONZE HOLDER</div>
-              <h3 style={{ margin: '10px 0' }}>10,000+ $ZNTC</h3>
-              <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
-                <li>Basic AI Dashboard Access</li>
-                <li>Community Loyalty Badge</li>
-              </ul>
+          <>
+            <h1 style={{ margin: '0 0 10px 0', fontSize: '2rem' }}>Core Utilities</h1>
+            <p style={{ color: '#94a3b8', marginBottom: '30px' }}>$ZNTC is a digital testament to your support for the decentralized AI revolution.</p>
+            
+            <div className="grid-container">
+              <div className="card tier-card">
+                <div style={{ color: 'var(--base-glow)', fontWeight: 800, fontSize: '0.7rem' }}>UTILITY 01</div>
+                <h3 style={{ margin: '10px 0' }}>Governance</h3>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Exercise voting power within the ZYNETHIC DAO to collectively decide which AI innovations to support.</p>
+              </div>
+              <div className="card tier-card">
+                <div style={{ color: 'var(--base-glow)', fontWeight: 800, fontSize: '0.7rem' }}>UTILITY 02</div>
+                <h3 style={{ margin: '10px 0' }}>AI Dashboard</h3>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Exclusive access to proprietary, AI-driven tools designed for deep market analysis and decentralized intelligence.</p>
+              </div>
+              <div className="card tier-card">
+                <div style={{ color: 'var(--base-glow)', fontWeight: 800, fontSize: '0.7rem' }}>UTILITY 03</div>
+                <h3 style={{ margin: '10px 0' }}>Ecosystem Loyalty</h3>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Staking mechanism that rewards long-term supporters with ecosystem yield, aligning commitment with rewards.</p>
+              </div>
+              <div className="card tier-card">
+                <div style={{ color: 'var(--base-glow)', fontWeight: 800, fontSize: '0.7rem' }}>UTILITY 04</div>
+                <h3 style={{ margin: '10px 0' }}>AI Catalyst</h3>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Foundational utility engine for developers building decentralized AI agents on the Base Chain.</p>
+              </div>
             </div>
-            <div className="card tier-card" style={{ boxShadow: '0 0 15px rgba(0, 82, 255, 0.2)' }}>
-              <div style={{ color: '#ffd700', fontWeight: 800, fontSize: '0.7rem' }}>GOLD HOLDER</div>
-              <h3 style={{ margin: '10px 0' }}>50,000+ $ZNTC</h3>
-              <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
-                <li>AI Sentiment Analysis</li>
-                <li>Governance Voting Rights</li>
-                <li>Premium Holder Badge</li>
-              </ul>
-            </div>
-            <div className="card tier-card">
-              <div style={{ color: '#e5e4e2', fontWeight: 800, fontSize: '0.7rem' }}>PLATINUM WHALE</div>
-              <h3 style={{ margin: '10px 0' }}>250,000+ $ZNTC</h3>
-              <ul style={{ fontSize: '0.8rem', color: '#94a3b8', paddingLeft: '15px' }}>
-                <li>Full AI Engine Access</li>
-                <li>Early Beta Feature Access</li>
-                <li>Elite Identity Badge</li>
-              </ul>
+          </>
+        )}
+
+        {activeTab === 'governance' && (
+          <div className="card" style={{ maxWidth: '600px', textAlign: 'center' }}>
+            <i className="fa-solid fa-user-shield" style={{ fontSize: '3rem', color: '#0052ff', marginBottom: '20px' }}></i>
+            <h2>Global Community Advocacy</h2>
+            <p style={{ color: '#94a3b8' }}>$ZNTC grants you a seat at the table. Collectively decide the future of the AI + Web3 ecosystem.</p>
+            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '15px', marginTop: '20px' }}>
+               <p style={{ margin: 0, fontWeight: 700 }}>Status: <span style={{ color: '#ff4d4d' }}>Wallet Not Connected</span></p>
             </div>
           </div>
         )}
 
         {activeTab === 'burn' && (
           <div className="card" style={{ maxWidth: '600px' }}>
-            <h3><i className="fa-solid fa-fire" style={{ color: '#ff4d4d' }}></i> Burn Tracker</h3>
+            <h3><i className="fa-solid fa-fire" style={{ color: '#ff4d4d' }}></i> Strategic Scarcity</h3>
             <div style={{ fontSize: '2.5rem', fontWeight: 800, margin: '20px 0' }}>4,000,000 <span style={{ fontSize: '0.9rem', color: '#94a3b8' }}>$ZNTC</span></div>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>10% of total supply is allocated for systematic deflation to increase scarcity.</p>
+            <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>With a fixed total supply of 40,000,000 $ZNTC, we prioritize a stable and sustainable economic model through systematic burns.</p>
             <div style={{ background: '#222', height: '12px', borderRadius: '10px', marginTop: '20px', overflow: 'hidden' }}>
               <div style={{ width: '0%', background: 'linear-gradient(90deg, #ff4d4d, #0052ff)', height: '100%' }}></div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', fontSize: '0.7rem', fontWeight: 700 }}>
               <span>0 BURNED</span>
               <span>GOAL: 4,000,000</span>
-            </div>
-          </div>
-        )}
-
-        {activeTab === 'governance' && (
-          <div className="card" style={{ maxWidth: '600px', textAlign: 'center' }}>
-            <i className="fa-solid fa-user-shield" style={{ fontSize: '3rem', color: '#0052ff', marginBottom: '20px' }}></i>
-            <h2>Governance Voting</h2>
-            <p style={{ color: '#94a3b8' }}>Hold at least 50,000 $ZNTC to participate in ecosystem decision-making.</p>
-            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '20px', borderRadius: '15px', marginTop: '20px' }}>
-               <p style={{ margin: 0, fontWeight: 700 }}>Status: <span style={{ color: '#ff4d4d' }}>Wallet Not Connected</span></p>
             </div>
           </div>
         )}
@@ -216,7 +235,7 @@ export default function Page() {
         {activeTab === 'leaderboard' && (
           <div className="card">
             <h3><i className="fa-solid fa-ranking-star" style={{ color: '#ffd700' }}></i> Top Holders Leaderboard</h3>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Top 100 $ZNTC holders. Long-term holders receive special digital badges.</p>
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Daftar pemegang $ZNTC teratas yang mendukung revolusi AI terdesentralisasi.</p>
             <div style={{ marginTop: '20px', textAlign: 'center', padding: '40px', border: '1px dashed var(--glass-border)', borderRadius: '15px', color: '#444' }}>
                Data will be available after Presale & Listing
             </div>
@@ -225,7 +244,7 @@ export default function Page() {
         
         {/* Footer Area (In-flow) */}
         <div style={{ marginTop: '60px', paddingBottom: '20px', textAlign: 'center', fontSize: '0.7rem', color: '#444', letterSpacing: '1px' }}>
-          ZYNETHIC ECOSYSTEM 2026 - BUILT ON BASE L2
+          ZYNETHIC ECOSYSTEM 2026 - BUILDING THE FUTURE OF AI + WEB3
         </div>
       </main>
     </div>
