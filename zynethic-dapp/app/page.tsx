@@ -144,7 +144,7 @@ export default function Page() {
                 <div style={{ width: '100%', height: '90%', borderRadius: '12px', background: '#000', marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                     <div style={{ padding: '20px', textAlign: 'center', width: '100%' }}>
                         <p style={{ color: '#94a3b8', fontSize: '0.8rem' }}>DEXSCREENER API LINKED (PENDING LAUNCH)</p>
-                        <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnNnd2h6b3NqbmpsZ2Z0ZzVxdzZzdzZzdzZzdzZzdzZzdzZzJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxxS06LzZ9S/giphy.gif" alt="Chart Loading" style={{ height: '150px', opacity: 0.3 }} />
+                        <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHYwNnNnd2h6b3NqbmpsZ2Z0ZzVxdzZzdzZzdzZzdzZzdzZzdzZzJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGpxxS06LzZ9S/giphy.gif" alt="Price Chart" style={{ height: '150px', opacity: 0.3 }} />
                         <p style={{ color: 'var(--base-glow)', fontWeight: 800 }}>CHART WILL APPEAR AT LAUNCH</p>
                     </div>
                 </div>
