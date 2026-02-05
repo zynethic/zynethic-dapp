@@ -7,6 +7,7 @@ import { getRealBalance, fetchLivePrice } from '@/lib/calls';
 export default function Page() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isConnected, setIsConnected] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [walletAddress, setWalletAddress] = useState('');
   const [userBalance, setUserBalance] = useState(0); 
   const [sentiment, setSentiment] = useState({ value: 0, label: 'Analyzing...' });
@@ -37,6 +38,7 @@ export default function Page() {
   }, []);
 
   const handleConnect = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { ethereum } = window as any;
     if (typeof window !== 'undefined' && ethereum) {
       try {
@@ -78,11 +80,9 @@ export default function Page() {
         :root { --primary-bg: #010409; --base-blue: #0052ff; --base-glow: #00f7ff; --glass-bg: rgba(10, 17, 32, 0.7); --glass-border: rgba(255, 255, 255, 0.1); --pancake-bg: #27262c; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden; background-color: var(--primary-bg); }
         
-        /* Navbar Adjustment */
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 5%; position: fixed; width: 100%; top: 0; z-index: 1000; background: rgba(1, 4, 9, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); box-sizing: border-box; }
         .nav-links-desktop { display: flex; gap: 15px; margin: 0 20px; }
         
-        /* Sidebar Hidden on Desktop for Top Menu */
         .sidebar { display: none; }
 
         .main-content { padding: 100px 40px 60px; flex-grow: 1; display: flex; flex-direction: column; width: 100%; box-sizing: border-box; }
@@ -90,7 +90,6 @@ export default function Page() {
         .nav-item { padding: 8px 12px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 0.85rem; }
         .nav-item:hover, .nav-item.active { background: rgba(0, 82, 255, 0.1); color: var(--base-glow); }
         
-        /* Swap UI ala Pancake */
         .swap-container { background: var(--pancake-bg); border-radius: 24px; padding: 20px; width: 100%; max-width: 420px; margin: 0 auto; border: 1px solid var(--glass-border); box-shadow: 0px 4px 20px rgba(0,0,0,0.5); }
         .swap-input-box { background: #372f47; border-radius: 16px; padding: 16px; margin-bottom: 8px; border: 1px solid transparent; }
         .swap-input-box:focus-within { border-color: var(--base-glow); }
@@ -104,12 +103,10 @@ export default function Page() {
         .btn-primary { background: var(--base-blue); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; border-bottom: 3px solid rgba(0,0,0,0.2); }
         .btn-primary:active { transform: translateY(2px); border-bottom: none; }
         
-        /* Mobile Menu Bottom */
         .mobile-menu { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: #191326; border-top: 1px solid var(--glass-border); justify-content: space-around; padding: 10px 0; z-index: 1000; }
         .mobile-menu .nav-item { flex-direction: column; gap: 4px; font-size: 0.65rem; padding: 5px; }
         .mobile-menu .nav-item i { font-size: 1.2rem; }
 
-        /* AI FAB Position adjustment */
         .ai-fab { position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; background: var(--base-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; cursor: pointer; z-index: 999; border: 2px solid var(--base-glow); }
         
         .status-pill { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; border: 1px solid var(--base-glow); color: var(--base-glow); margin-bottom: 10px; }
@@ -129,6 +126,7 @@ export default function Page() {
 
       <nav className="navbar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" style={{ width: '28px', height: '28px' }} />
           <div style={{ fontWeight: 800, fontSize: '1rem', color: '#ffffff', letterSpacing: '0.5px' }}>ZYNETHIC</div>
           <div className="nav-links-desktop">
@@ -140,7 +138,6 @@ export default function Page() {
         </button>
       </nav>
 
-      {/* Mobile Bottom Navigation */}
       <div className="mobile-menu">
         <NavItems />
       </div>
@@ -181,7 +178,6 @@ export default function Page() {
               </div>
               {!hasAccess(50000) && <div className="locked-overlay"><p>GOLD TIER REQUIRED</p></div>}
             </div>
-            {/* ... card lainnya tetap sama ... */}
             <div className="card">
                 <h3><i className="fa-solid fa-robot"></i> Terminal Assistant</h3>
                 <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '15px', height: '80px', fontSize: '0.8rem' }}>
@@ -205,6 +201,7 @@ export default function Page() {
                 <div className="swap-input-row">
                   <input type="number" className="swap-input" placeholder="0.0" />
                   <div className="token-select">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" width="20" alt="eth" />
                     ETH <i className="fa-solid fa-chevron-down" style={{ fontSize: '0.6rem' }}></i>
                   </div>
@@ -222,6 +219,7 @@ export default function Page() {
                 <div className="swap-input-row">
                   <input type="number" className="swap-input" placeholder="0.0" readOnly />
                   <div className="token-select" style={{ background: 'var(--base-blue)' }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" width="20" alt="zntc" />
                     $ZNTC
                   </div>
