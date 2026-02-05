@@ -82,7 +82,6 @@ export default function Page() {
         
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 4%; position: fixed; width: 100%; top: 0; z-index: 1000; background: rgba(1, 4, 9, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); box-sizing: border-box; }
         
-        /* Penyesuaian agar posisi benar-benar di tengah tanpa tumpang tindih */
         .nav-center-wrapper { 
           flex: 1;
           display: flex; 
@@ -92,7 +91,7 @@ export default function Page() {
         
         .nav-links-desktop { 
           display: flex; 
-          gap: 5px; /* Jarak antar menu dirapatkan */
+          gap: 5px; 
         }
         
         .main-content { padding: 100px 40px 60px; flex-grow: 1; display: flex; flex-direction: column; width: 100%; box-sizing: border-box; }
@@ -100,7 +99,6 @@ export default function Page() {
         .nav-item { padding: 6px 10px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.8rem; white-space: nowrap; }
         .nav-item:hover, .nav-item.active { background: rgba(0, 82, 255, 0.1); color: var(--base-glow); }
         
-        /* Mengecilkan ukuran tombol connect */
         .btn-connect-fixed {
           padding: 6px 14px !important;
           font-size: 0.75rem !important;
@@ -178,14 +176,14 @@ export default function Page() {
       {isChatOpen && (
         <div className="ai-chat-box" style={{ position: 'fixed', bottom: '150px', right: '20px', width: '320px', height: '400px', background: '#010409', border: '1px solid var(--glass-border)', borderRadius: '20px', zIndex: 2000, display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
           <div className="ai-chat-header" style={{ background: 'rgba(0, 82, 255, 0.1)', padding: '15px', fontWeight: 800, display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--glass-border)' }}>
-            <span><i className="fa-solid fa-robot" style={{color: 'var(--base-glow)'}}></i> ZNTC AI ASISTEN</span>
+            <span><i className="fa-solid fa-robot" style={{color: 'var(--base-glow)'}}></i> ZNTC AI ASSISTANT</span>
             <i className="fa-solid fa-chevron-down" style={{cursor: 'pointer'}} onClick={() => setIsChatOpen(false)}></i>
           </div>
           <div style={{ flex: 1, padding: '15px', fontSize: '0.8rem', overflowY: 'auto' }}>
-            {isConnected ? `Halo! Saldo: ${userBalance.toLocaleString()} $ZNTC. Apa yang ingin Anda tanyakan?` : "Hubungkan wallet untuk analisa portofolio mendalam."}
+            {isConnected ? `Hello! Balance: ${userBalance.toLocaleString()} $ZNTC. How can I assist you today?` : "Connect your wallet for deep portfolio analysis."}
           </div>
           <div style={{ padding: '10px', borderTop: '1px solid var(--glass-border)' }}>
-             <input type="text" placeholder="Tanya AI..." style={{ width: '100%', background: '#000', border: '1px solid #333', padding: '8px', borderRadius: '8px', color: 'white' }} />
+             <input type="text" placeholder="Ask AI..." style={{ width: '100%', background: '#000', border: '1px solid #333', padding: '8px', borderRadius: '8px', color: 'white' }} />
           </div>
         </div>
       )}
@@ -212,9 +210,9 @@ export default function Page() {
               <div className="card">
                 <h3><i className="fa-solid fa-robot"></i> Terminal Assistant</h3>
                 <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '15px', height: '80px', fontSize: '0.8rem', overflowY: 'auto' }}>
-                  {isConnected ? `System active. Whale activity detected on Aerodrome.` : "Waiting for connection..."}
+                  {isConnected ? `System active. On-chain activity monitored.` : "Waiting for connection..."}
                 </div>
-                <input type="text" placeholder="Tanya AI..." disabled={!hasAccess(10000)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white', marginTop: '10px', boxSizing: 'border-box' }} />
+                <input type="text" placeholder="Ask AI..." disabled={!hasAccess(10000)} style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white', marginTop: '10px', boxSizing: 'border-box' }} />
                 {!hasAccess(10000) && <div className="locked-overlay"><p>BRONZE TIER REQUIRED</p></div>}
               </div>
             </div>
@@ -222,15 +220,15 @@ export default function Page() {
             <div className="card" style={{ marginTop: '20px' }}>
               <h3><i className="fa-solid fa-chart-line" style={{ color: '#00f7ff', marginRight: '10px' }}></i> $ZNTC Market Chart</h3>
               <div style={{ width: '100%', height: '200px', background: 'rgba(0,0,0,0.5)', borderRadius: '15px', marginTop: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                 <p style={{ fontSize: '0.8rem', color: '#444' }}>[ DEXSCREENER CHART WILL LOAD HERE ]</p>
+                 <p style={{ fontSize: '0.8rem', color: '#444' }}>[ DEXSCREENER CHART LOADING ]</p>
               </div>
             </div>
 
             <div className="grid-container">
                 <div className="card">
                     <h3><i className="fa-solid fa-microchip"></i> AI Agent & Quest</h3>
-                    <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Auto-Yield Farming on Aerodrome.</p>
-                    <button className="btn-primary" style={{ marginTop: '10px', fontSize: '0.75rem' }}>START BASE QUEST</button>
+                    <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Real-time yield optimization on Base.</p>
+                    <button className="btn-primary" style={{ marginTop: '10px', fontSize: '0.75rem' }}>START QUEST</button>
                     {!hasAccess(50000) && <div className="locked-overlay"><p>GOLD ACCESS ONLY</p></div>}
                 </div>
                 <div className="card">
@@ -245,7 +243,7 @@ export default function Page() {
               <table className="ai-table">
                 <thead><tr><th>TOKEN</th><th>AI SCORE</th><th>SIGNAL</th><th>OUTLOOK</th></tr></thead>
                 <tbody>
-                  <tr><td>$ZNTC</td><td>94/100</td><td className="trend-up">STRONG BUY</td><td>Accumulation</td></tr>
+                  <tr><td>$ZNTC</td><td>94/100</td><td className="trend-up">STRONG BUY</td><td>Real-time Analysis</td></tr>
                   <tr><td>🔵 ETH</td><td>78/100</td><td className="trend-up">BUY</td><td>Steady</td></tr>
                 </tbody>
               </table>
@@ -307,8 +305,8 @@ export default function Page() {
             </div>
             <div style={{ marginTop: '20px', padding: '20px', border: '1px solid var(--base-glow)', borderRadius: '15px' }}>
                 <h4>Presale: Early Bird Access</h4>
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Only for $ZNTC holders on Base Network.</p>
-                <button className="btn-primary" style={{ marginTop: '10px' }} onClick={() => isConnected ? alert("Checking eligibility...") : handleConnect()}>CHECK ELIGIBILITY</button>
+                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Verified $ZNTC holders on Base Mainnet only.</p>
+                <button className="btn-primary" style={{ marginTop: '10px' }} onClick={() => isConnected ? alert("Verifying on-chain eligibility...") : handleConnect()}>CHECK ELIGIBILITY</button>
             </div>
           </div>
         )}
@@ -331,13 +329,13 @@ export default function Page() {
               <div className="card">
                 <h3><i className="fa-solid fa-fire"></i> Burn Tracker</h3>
                 <h2 style={{ fontSize: '2.5rem', margin: '20px 0' }}>4,000,000 <span style={{ fontSize: '1rem', color: '#94a3b8' }}>$ZNTC</span></h2>
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>10% Total Supply systematic deflation.</p>
+                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>10% Total Supply deflationary burn event.</p>
               </div>
               <div className="card">
                 <h3><i className="fa-solid fa-whale"></i> Whale Tracker AI</h3>
                 <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '15px' }}>
-                    <p style={{ color: '#ff4d4d' }}>[ALERT] 250k $ZNTC Burned (Simulated)</p>
-                    <p style={{ color: '#00ff88' }}>[ALERT] New Accumulation Detected</p>
+                    <p style={{ color: '#ff4d4d' }}>[ALERT] Significant $ZNTC Burned</p>
+                    <p style={{ color: '#00ff88' }}>[ALERT] Large On-Chain Accumulation Detected</p>
                 </div>
               </div>
           </div>
@@ -350,4 +348,3 @@ export default function Page() {
     </div>
   );
 }
-
