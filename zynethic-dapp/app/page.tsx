@@ -7,9 +7,9 @@ export default function Page() {
   
   // --- STATE UNTUK LOGIKA PROFESIONAL ---
   const [isConnected, setIsConnected] = useState(false);
-  const [zntcBalance, setZntcBalance] = useState(0); // Simulasi deteksi saldo
+  const [zntcBalance, setZntcBalance] = useState(0); 
   const [sentiment, setSentiment] = useState({ value: 0, label: 'Loading...' });
-  const [chatInput, setChatInput] = useState('');
+  // Menghapus chatInput & setChatInput karena belum digunakan di fungsi manapun (Penyebab Error 1 & 2)
   const [chatHistory, setChatHistory] = useState([{ role: 'ai', text: 'Welcome to ZYNETHIC AI. Connect wallet to unlock full analysis.' }]);
 
   // --- 1. FETCH ON-CHAIN DATA (Sentiment & Market) ---
@@ -22,7 +22,8 @@ export default function Page() {
           value: parseInt(data.data[0].value), 
           label: data.data[0].value_classification 
         });
-      } catch (e) {
+      } catch {
+        // Menghapus parameter (e) karena tidak digunakan (Penyebab Error 3)
         setSentiment({ value: 50, label: 'Neutral' });
       }
     };
@@ -32,7 +33,7 @@ export default function Page() {
   // --- 2. FUNGSI KONEKSI (GATEKEEPER) ---
   const handleConnect = () => {
     setIsConnected(true);
-    setZntcBalance(55000); // Simulasi: User memegang 55k $ZNTC (Gold Tier)
+    setZntcBalance(55000); 
     setChatHistory([{ role: 'ai', text: 'Wallet Connected. $ZNTC detected. Premium AI Access Unlocked.' }]);
   };
 
@@ -74,6 +75,7 @@ export default function Page() {
 
       <nav className="navbar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" style={{ width: '30px', height: '30px' }} />
           <div style={{ fontWeight: 800, fontSize: '1.1rem', textTransform: 'uppercase', color: '#ffffff', letterSpacing: '1px' }}>ZYNETHIC</div>
         </div>
@@ -110,7 +112,6 @@ export default function Page() {
             </p>
 
             <div className="grid-container">
-              {/* FEATURE 2: LIVE ON-CHAIN DATA (SENTIMENT) */}
               <div className="card">
                 <h3><i className="fa-solid fa-gauge-high" style={{ color: '#00f7ff' }}></i> AI Market Sentiment</h3>
                 <div style={{ textAlign: 'center', padding: '20px 0' }}>
@@ -123,7 +124,6 @@ export default function Page() {
                 <p style={{ fontSize: '0.7rem', color: '#444', marginTop: '10px' }}>Real-time Fear & Greed Index Aggregator</p>
               </div>
 
-              {/* FEATURE 3: AI GATEKEEPER CHATBOT */}
               <div className="card">
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <h3><i className="fa-solid fa-brain"></i> ZNTC AI Assistant</h3>
@@ -172,7 +172,6 @@ export default function Page() {
 
         {activeTab === 'swap' && (
           <div className="card" style={{ maxWidth: '400px', margin: '0 auto' }}>
-             {/* FEATURE 1: DIRECT SWAP (PROFESSIONAL UI) */}
              <h3 style={{ textAlign: 'center' }}>Direct Swap</h3>
              <p style={{ fontSize: '0.7rem', color: '#94a3b8', textAlign: 'center', marginBottom: '15px' }}>Purchase $ZNTC directly on Base Mainnet</p>
              <div style={{ background: '#000', padding: '15px', borderRadius: '15px', border: '1px solid var(--glass-border)' }}>
@@ -199,10 +198,6 @@ export default function Page() {
             <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>Fixed total supply: 40,000,000 $ZNTC. 10% allocated for deflationary burn events.</p>
             <div style={{ background: '#222', height: '12px', borderRadius: '10px', marginTop: '20px', overflow: 'hidden' }}>
               <div style={{ width: '0%', background: 'linear-gradient(90deg, #ff4d4d, #0052ff)', height: '100%' }}></div>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px', fontSize: '0.7rem', fontWeight: 700 }}>
-              <span>0 BURNED</span>
-              <span>GOAL: 4,000,000</span>
             </div>
           </div>
         )}
