@@ -4,11 +4,6 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers'; 
 import { getRealBalance, fetchLivePrice } from '@/lib/calls';
 
-// Mendefinisikan interface sederhana agar ESLint tidak marah
-interface EthereumWindow extends Window {
-  ethereum?: any;
-}
-
 export default function Page() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isConnected, setIsConnected] = useState(false);
@@ -42,11 +37,12 @@ export default function Page() {
   }, []);
 
   const handleConnect = async () => {
-    const customWindow = window as unknown as EthereumWindow;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { ethereum } = window as any;
     
-    if (typeof window !== 'undefined' && customWindow.ethereum) {
+    if (typeof window !== 'undefined' && ethereum) {
       try {
-        const provider = new ethers.BrowserProvider(customWindow.ethereum);
+        const provider = new ethers.BrowserProvider(ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
         const address = accounts[0];
         
