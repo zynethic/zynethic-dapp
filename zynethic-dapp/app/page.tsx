@@ -1,8 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react'; // useRef dihapus
+import { useState, useEffect } from 'react'; 
 import { ethers } from 'ethers'; 
 import { getRealBalance, fetchLivePrice } from '@/lib/calls';
+
+// Mendefinisikan interface sederhana agar ESLint tidak marah
+interface EthereumWindow extends Window {
+  ethereum?: any;
+}
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -37,12 +42,11 @@ export default function Page() {
   }, []);
 
   const handleConnect = async () => {
-    // Penanganan tipe data window yang aman untuk TypeScript
-    const { ethereum } = window as unknown as { ethereum: any };
+    const customWindow = window as unknown as EthereumWindow;
     
-    if (typeof window !== 'undefined' && ethereum) {
+    if (typeof window !== 'undefined' && customWindow.ethereum) {
       try {
-        const provider = new ethers.BrowserProvider(ethereum);
+        const provider = new ethers.BrowserProvider(customWindow.ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
         const address = accounts[0];
         
