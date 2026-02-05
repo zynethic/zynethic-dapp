@@ -7,26 +7,22 @@ const MINIMAL_ABI = [
   "function decimals() view returns (uint8)"
 ];
 
-// Interface untuk window agar lolos build
-interface EthereumWindow extends Window {
-  ethereum?: any;
-}
-
 export const getRealBalance = async (userAddress: string) => {
-  if (typeof window === 'undefined') return 0;
-  
-  const customWindow = window as unknown as EthereumWindow;
-
-  if (customWindow.ethereum) {
-    try {
-      const provider = new ethers.BrowserProvider(customWindow.ethereum);
-      const contract = new ethers.Contract(ZNTC_CONTRACT_ADDRESS, MINIMAL_ABI, provider);
-      const balance = await contract.balanceOf(userAddress);
-      const decimals = await contract.decimals();
-      return parseFloat(ethers.formatUnits(balance, decimals));
-    } catch (error) {
-      console.error("Error fetching real balance:", error);
-      return 0;
+  if (typeof window !== 'undefined') {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { ethereum } = window as any;
+    
+    if (ethereum) {
+      try {
+        const provider = new ethers.BrowserProvider(ethereum);
+        const contract = new ethers.Contract(ZNTC_CONTRACT_ADDRESS, MINIMAL_ABI, provider);
+        const balance = await contract.balanceOf(userAddress);
+        const decimals = await contract.decimals();
+        return parseFloat(ethers.formatUnits(balance, decimals));
+      } catch (error) {
+        console.error("Error fetching real balance:", error);
+        return 0;
+      }
     }
   }
   return 0;
