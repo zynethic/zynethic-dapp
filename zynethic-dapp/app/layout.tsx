@@ -17,8 +17,13 @@ export const metadata: Metadata = {
   title: "ZYNETHIC DApp",
   description: "Global AI community token. Building the future of AI + Web3.",
   icons: {
-    icon: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png" },
+    ],
   },
 };
 
