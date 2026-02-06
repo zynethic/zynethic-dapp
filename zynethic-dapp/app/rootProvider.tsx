@@ -7,6 +7,7 @@ import "@coinbase/onchainkit/styles.css";
 export function RootProvider({ children }: { children: ReactNode }) {
   return (
     <OnchainKitProvider
+      // Gunakan API Key dari Coinbase CDP Anda
       apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
       chain={base}
       config={{
@@ -15,7 +16,8 @@ export function RootProvider({ children }: { children: ReactNode }) {
         },
         wallet: {
           display: "modal",
-          preference: "all",
+          // Masukkan Project ID Reown yang Anda dapatkan tadi di sini
+          walletConnectProjectId: "4b7d76f778e53c6d1848be8b3566f6e7",
         },
       }}
     >
