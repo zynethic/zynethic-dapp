@@ -8,7 +8,7 @@ export function RootProvider({ children }: { children: ReactNode }) {
   return (
     <OnchainKitProvider
       // Gunakan API Key dari Coinbase CDP Anda
-      apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
+      apiKey={process.env.NEXT_PUBLIC_CDP_API_KEY}
       chain={base}
       config={{
         appearance: {
