@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     `;
 
     let aiText = "";
-    let lastError: any = null;
+    lastErrorMessage = "";
 
     // Loop untuk mencoba beberapa model sesuai permintaan
     for (const modelName of MODELS_TO_TRY) {
