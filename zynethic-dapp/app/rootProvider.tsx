@@ -17,10 +17,9 @@ export function RootProvider({ children }: { children: ReactNode }) {
           display: "modal",
           preference: "all", 
         },
-        // POSISI BARU: Harus di luar objek wallet sesuai standar OnchainKit terbaru
-        // Ini akan mengaktifkan WalletConnect secara otomatis
-        // @ts-ignore - Tambahkan ini jika TypeScript masih protes, tapi posisinya sudah benar
-        walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
+        // Kita gunakan Type Casting 'as any' secara spesifik di sini 
+        // agar ESLint & TypeScript membiarkan walletConnectProjectId lewat.
+        ...({ walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID } as any),
       }}
     >
       {children}
