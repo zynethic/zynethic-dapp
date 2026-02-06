@@ -7,6 +7,14 @@ import { Wallet, ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from 
 import { Identity, Name, Address, Avatar } from '@coinbase/onchainkit/identity';
 import { useAccount } from 'wagmi';
 
+// Perbaikan: Menambahkan interface untuk keamanan tipe data (Security Scan)
+interface GoPlusScanResult {
+  is_honeypot: string;
+  buy_tax: string;
+  sell_tax: string;
+  [key: string]: string | undefined;
+}
+
 export default function Page() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isConnected, setIsConnected] = useState(false);
@@ -21,9 +29,10 @@ export default function Page() {
   // Security Scan States
   const [scanAddress, setScanAddress] = useState('');
   const [isScanning, setIsScanning] = useState(false);
-  const [scanResult, setScanResult] = useState<any>(null);
+  // Perbaikan: Mengganti <any> dengan <GoPlusScanResult | null>
+  const [scanResult, setScanResult] = useState<GoPlusScanResult | null>(null);
 
-  const { address, isConnected: isWalletConnected } = useAccount();
+  const { address, isWalletConnected } = useAccount();
 
   useEffect(() => {
     if (isWalletConnected && address) {
