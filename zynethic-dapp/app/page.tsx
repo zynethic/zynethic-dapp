@@ -182,11 +182,20 @@ export default function Page() {
       )}
 
       <main className="main-content">
-        <div className="status-pill">PHASE: DEVELOPMENT & PRE-LAUNCH</div>
-        <h1 style={{ margin: '0 0 5px 0', fontSize: '1.5rem' }}>ZYNETHIC COMMAND CENTER</h1>
-        <p style={{ color: '#94a3b8', fontSize: '0.75rem', marginBottom: '20px' }}>
-          <span className="live-dot"></span> <strong>LIVE:</strong> {lastActivity.addr} | Price: ${livePrice}
-        </p>
+        {/* Header Section bergaya Hub/AIxC */}
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <div className="status-pill">PHASE: DEVELOPMENT & PRE-LAUNCH</div>
+          <h1 style={{ margin: '10px 0 10px 0', fontSize: '3rem', fontWeight: 800, letterSpacing: '-1px' }}>ZYNETHIC Hub</h1>
+          <h2 style={{ margin: '0 auto 15px auto', fontSize: '1.4rem', fontWeight: 600, color: '#ffffff', maxWidth: '700px', lineHeight: '1.3' }}>
+            Global AI community token. Building the future of AI + Web3.
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '15px', maxWidth: '600px', margin: '0 auto 20px auto' }}>
+            The Command Center for real-time AI sentiment analysis, on-chain whale tracking, and predictive competition.
+          </p>
+          <p style={{ color: '#94a3b8', fontSize: '0.75rem' }}>
+            <span className="live-dot"></span> <strong>LIVE:</strong> {lastActivity.addr} | Price: ${livePrice}
+          </p>
+        </div>
 
         {activeTab === 'dashboard' && (
           <>
