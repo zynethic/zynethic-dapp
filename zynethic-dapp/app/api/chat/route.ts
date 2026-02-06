@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     `;
 
     let aiText = "";
-    lastErrorMessage = "";
+    let lastErrorMessage = "";
 
     // Loop untuk mencoba beberapa model sesuai permintaan
     for (const modelName of MODELS_TO_TRY) {
@@ -76,25 +76,25 @@ export async function POST(req: Request) {
         const data = await response.json();
 
         if (data.error) {
-          lastError = data.error;
+          lastErrorMessage = data.error.message || "Unknown API error";
           // Jika error adalah masalah kuota (429), lanjutkan ke model berikutnya
           if (data.error.code === 429 || data.error.status === "RESOURCE_EXHAUSTED") {
             continue;
           }
-          throw new Error(data.error.message);
+          throw new Error(lastErrorMessage);
         }
 
         aiText = data.candidates[0].content.parts[0].text;
         break; // Berhasil, keluar dari loop
 
-      } catch (err) {
-        lastError = err;
+      } catch (err: unknown) {
+        lastErrorMessage = err instanceof Error ? err.message : "Fetch error";
         continue; // Coba model selanjutnya jika fetch gagal
       }
     }
 
-    if (!aiText && lastError) {
-      throw lastError;
+    if (!aiText) {
+      throw new Error(lastErrorMessage || "All AI models are currently unreachable");
     }
 
     return NextResponse.json({ text: aiText });
