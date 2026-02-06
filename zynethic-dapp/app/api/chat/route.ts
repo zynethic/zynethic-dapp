@@ -5,12 +5,21 @@ export async function POST(req: Request) {
     const { userPrompt, context } = await req.json();
     
     const API_KEY = process.env.GEMINI_API_KEY;
-    // Menggunakan model 2.0 Flash untuk kecepatan dan kepatuhan instruksi yang lebih baik
-    const MODEL = "gemini-2.0-flash"; 
 
     if (!API_KEY) {
       return NextResponse.json({ error: "AI Configuration missing" }, { status: 500 });
     }
+
+    /**
+     * DAFTAR MODEL FALLBACK
+     * Sistem akan mencoba model dari atas ke bawah jika terjadi error kuota.
+     */
+    const MODELS_TO_TRY = [
+      "gemini-2.0-flash",
+      "gemini-2.0-flash-lite",
+      "gemini-1.5-flash",
+      "gemini-flash-latest"
+    ];
 
     /**
      * ZYNETHIC CORE REGULATORY PROTOCOL
@@ -36,40 +45,61 @@ export async function POST(req: Request) {
       5. ECOSYSTEM LOYALTY: Maintain a professional tone that upholds the ZYNETHIC dApp as the premier AI + Web3 hub on Base Mainnet.
     `;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [{ text: `${systemInstruction}\n\nUser Inquiry: ${userPrompt}` }]
-            }
-          ],
-          generationConfig: {
-            temperature: 0.4, 
-            maxOutputTokens: 800,
-            topP: 0.8,
-            topK: 40
+    let aiText = "";
+    let lastError: any = null;
+
+    // Loop untuk mencoba beberapa model sesuai permintaan
+    for (const modelName of MODELS_TO_TRY) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: "user",
+                  parts: [{ text: `${systemInstruction}\n\nUser Inquiry: ${userPrompt}` }]
+                }
+              ],
+              generationConfig: {
+                temperature: 0.4, 
+                maxOutputTokens: 800,
+                topP: 0.8,
+                topK: 40
+              }
+            })
           }
-        })
+        );
+
+        const data = await response.json();
+
+        if (data.error) {
+          lastError = data.error;
+          // Jika error adalah masalah kuota (429), lanjutkan ke model berikutnya
+          if (data.error.code === 429 || data.error.status === "RESOURCE_EXHAUSTED") {
+            continue;
+          }
+          throw new Error(data.error.message);
+        }
+
+        aiText = data.candidates[0].content.parts[0].text;
+        break; // Berhasil, keluar dari loop
+
+      } catch (err) {
+        lastError = err;
+        continue; // Coba model selanjutnya jika fetch gagal
       }
-    );
-
-    const data = await response.json();
-
-    if (data.error) {
-      throw new Error(data.error.message);
     }
 
-    const aiText = data.candidates[0].content.parts[0].text;
+    if (!aiText && lastError) {
+      throw lastError;
+    }
 
     return NextResponse.json({ text: aiText });
 
   } catch (error: unknown) {
-    // Menangani error tanpa menggunakan tipe 'any' untuk mematuhi ESLint
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error("ZYNETHIC API Error:", errorMessage);
     
