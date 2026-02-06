@@ -109,7 +109,7 @@ export default function Page() {
         newMessages[newMessages.length - 1] = { role: 'assistant', content: aiResponse };
         return newMessages;
       });
-    } catch (_error) {
+    } catch {
       setChatMessages(prev => {
         const newMessages = [...prev];
         newMessages[newMessages.length - 1] = { role: 'assistant', content: 'Error connecting to AI core.' };
