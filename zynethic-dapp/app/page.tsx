@@ -3,6 +3,10 @@
 import { useState, useEffect } from 'react'; 
 import { ethers } from 'ethers'; 
 import { getRealBalance, fetchLivePrice, getTotalBurned, ZNTC_CONTRACT_ADDRESS } from '@/lib/calls';
+// Menambahkan import untuk OnchainKit Wallet
+import { Wallet, ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
+import { Identity, Name, Address, Avatar } from '@coinbase/onchainkit/identity';
+import { useAccount } from 'wagmi';
 
 export default function Page() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -14,6 +18,23 @@ export default function Page() {
   const [lastActivity, setLastActivity] = useState({addr: '0x00...000', amount: 'Waiting...'});
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [realBurned, setRealBurned] = useState(4000000);
+
+  // Mengambil status akun dari OnchainKit
+  const { address, isConnected: isWalletConnected } = useAccount();
+
+  // Effect untuk sinkronisasi status wallet OnchainKit ke state lokal Anda
+  useEffect(() => {
+    if (isWalletConnected && address) {
+      setIsConnected(true);
+      setWalletAddress(address);
+      getRealBalance(address).then(setUserBalance);
+      setLastActivity({ addr: address.substring(0,6) + '...' + address.substring(38), amount: 'Connected' });
+    } else {
+      setIsConnected(false);
+      setWalletAddress('');
+      setUserBalance(0);
+    }
+  }, [isWalletConnected, address]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,7 +62,7 @@ export default function Page() {
   }, []);
 
   const handleConnect = async () => {
-    // Memperbaiki error TypeScript dengan menggunakan indexing untuk menghindari deteksi 'any'
+    // Fungsi ini tetap ada namun sekarang digantikan oleh komponen <Wallet> di UI
     if (typeof window !== 'undefined' && window['ethereum' as keyof typeof window]) {
       try {
         const ethProvider = window['ethereum' as keyof typeof window];
@@ -52,12 +73,9 @@ export default function Page() {
         setIsConnected(true);
         const balance = await getRealBalance(address);
         setUserBalance(balance);
-        setLastActivity({ addr: address.substring(0,6) + '...' + address.substring(38), amount: 'Connected' });
       } catch (error) {
         console.error("Connection failed", error);
       }
-    } else {
-      alert("Please install MetaMask!");
     }
   };
 
@@ -88,7 +106,8 @@ export default function Page() {
         .main-content { padding: 100px 40px 60px; flex-grow: 1; display: flex; flex-direction: column; width: 100%; box-sizing: border-box; }
         .nav-item { padding: 6px 10px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.8rem; white-space: nowrap; }
         .nav-item:hover, .nav-item.active { background: rgba(0, 82, 255, 0.1); color: var(--base-glow); }
-        .btn-connect-fixed { padding: 6px 14px !important; font-size: 0.75rem !important; min-width: fit-content; }
+        /* Style untuk menyesuaikan tombol OnchainKit dengan desain Anda */
+        .btn-connect-fixed { padding: 6px 14px !important; font-size: 0.75rem !important; min-width: fit-content; background: var(--base-blue) !important; color: white !important; border-radius: 12px !important; border: none !important; font-weight: 700 !important; }
         .swap-container { background: var(--pancake-bg); border-radius: 24px; padding: 20px; width: 100%; max-width: 420px; margin: 0 auto; border: 1px solid var(--glass-border); box-shadow: 0px 4px 20px rgba(0,0,0,0.5); }
         .swap-input-box { background: #372f47; border-radius: 16px; padding: 16px; margin-bottom: 8px; border: 1px solid transparent; }
         .swap-input-box:focus-within { border-color: var(--base-glow); }
@@ -123,9 +142,21 @@ export default function Page() {
         </div>
         <div className="nav-center-wrapper"><div className="nav-links-desktop"><NavItems /></div></div>
         <div style={{ width: '180px', display: 'flex', justifyContent: 'flex-end' }}>
-          <button className="btn-primary btn-connect-fixed" onClick={handleConnect}>
-            {isConnected ? `${userBalance.toLocaleString()} $ZNTC` : 'CONNECT WALLET'}
-          </button>
+          {/* Mengganti tombol manual dengan OnchainKit Wallet Component */}
+          <Wallet>
+            <ConnectWallet className="btn-connect-fixed">
+              <Avatar className="h-6 w-6" />
+              <Name />
+            </ConnectWallet>
+            <WalletDropdown>
+              <Identity className="px-4 pt-3 pb-2" hasCopyAddressOnClick>
+                <Avatar />
+                <Name />
+                <Address />
+              </Identity>
+              <WalletDropdownDisconnect />
+            </WalletDropdown>
+          </Wallet>
         </div>
       </nav>
 
@@ -234,6 +265,7 @@ export default function Page() {
                   </div>
                 </div>
               </div>
+              {/* Tombol swap sekarang otomatis memicu koneksi via Wallet OnchainKit jika belum konek */}
               <button className="btn-primary" style={{ width: '100%', marginTop: '10px', padding: '15px', borderRadius: '16px' }} onClick={() => isConnected ? window.open(`https://app.uniswap.org/#/swap?outputCurrency=${ZNTC_CONTRACT_ADDRESS}&chain=base`, '_blank') : handleConnect()}>
                 {isConnected ? 'SWAP ON UNISWAP' : 'CONNECT WALLET'}
               </button>
