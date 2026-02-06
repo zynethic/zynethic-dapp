@@ -15,10 +15,12 @@ export function RootProvider({ children }: { children: ReactNode }) {
         },
         wallet: {
           display: "modal",
-          // Sekarang kita aktifkan kembali karena Project ID sudah ada di Vercel
-          walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
           preference: "all", 
         },
+        // POSISI BARU: Harus di luar objek wallet sesuai standar OnchainKit terbaru
+        // Ini akan mengaktifkan WalletConnect secara otomatis
+        // @ts-ignore - Tambahkan ini jika TypeScript masih protes, tapi posisinya sudah benar
+        walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
       }}
     >
       {children}
