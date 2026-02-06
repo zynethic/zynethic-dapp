@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect, useRef } from 'react'; // Menambahkan useRef
 import { ethers } from 'ethers'; 
 import { getRealBalance, fetchLivePrice, getTotalBurned, ZNTC_CONTRACT_ADDRESS } from '@/lib/calls';
+import { fetchAIResponse } from '@/lib/ai-assistant'; // Import fungsi AI
 import { Wallet, ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
 import { Identity, Name, Address, Avatar } from '@coinbase/onchainkit/identity';
 import { useAccount } from 'wagmi';
@@ -26,13 +27,26 @@ export default function Page() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [realBurned, setRealBurned] = useState(4000000);
 
+  // AI Assistant States
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState([
+    { role: 'assistant', content: 'Hello! I am ZNTC AI. How can I help you navigate the Base ecosystem today?' }
+  ]);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
   // Security Scan States
   const [scanAddress, setScanAddress] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<GoPlusScanResult | null>(null);
 
-  // PERBAIKAN: Menggunakan properti 'isConnected' yang valid dari wagmi
   const { address, isConnected: isWalletConnected } = useAccount();
+
+  // Auto-scroll chat
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [chatMessages]);
 
   useEffect(() => {
     if (isWalletConnected && address) {
@@ -68,6 +82,41 @@ export default function Page() {
     const interval = setInterval(fetchData, 15000); 
     return () => clearInterval(interval);
   }, []);
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+
+    const userMsg = chatInput;
+    setChatInput('');
+    setChatMessages(prev => [...prev, { role: 'user', content: userMsg }]);
+
+    // Loading State
+    setChatMessages(prev => [...prev, { role: 'assistant', content: 'Analyzing Base on-chain data...' }]);
+
+    try {
+      const contextData = {
+        livePrice,
+        sentiment: sentiment.label,
+        burned: realBurned,
+        userBalance
+      };
+
+      const aiResponse = await fetchAIResponse(userMsg, contextData);
+
+      setChatMessages(prev => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = { role: 'assistant', content: aiResponse };
+        return newMessages;
+      });
+    } catch (error) {
+      setChatMessages(prev => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = { role: 'assistant', content: 'Error connecting to AI core.' };
+        return newMessages;
+      });
+    }
+  };
 
   const handleSecurityScan = async () => {
     if (!scanAddress.startsWith('0x') || scanAddress.length !== 42) {
@@ -148,7 +197,7 @@ export default function Page() {
         .mobile-menu { display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: #191326; border-top: 1px solid var(--glass-border); justify-content: space-around; padding: 10px 0; z-index: 1000; }
         .mobile-menu .nav-item { flex-direction: column; gap: 4px; font-size: 0.65rem; padding: 5px; }
         .mobile-menu .nav-item i { font-size: 1.2rem; }
-        .ai-fab { position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; background: var(--base-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; cursor: pointer; z-index: 999; border: 2px solid var(--base-glow); }
+        .ai-fab { position: fixed; bottom: 85px; right: 20px; width: 55px; height: 55px; background: var(--base-blue) ; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; cursor: pointer; z-index: 999; border: 2px solid var(--base-glow); }
         .status-pill { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; border: 1px solid var(--base-glow); color: var(--base-glow); margin-bottom: 10px; }
         .locked-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(1, 4, 9, 0.85); backdrop-filter: blur(4px); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; text-align: center; }
         .live-dot { height: 8px; width: 8px; background-color: #00ff88; border-radius: 50%; display: inline-block; margin-right: 8px; animation: pulse 2s infinite; }
@@ -197,12 +246,33 @@ export default function Page() {
             <span><i className="fa-solid fa-robot" style={{color: 'var(--base-glow)'}}></i> ZNTC AI ASSISTANT</span>
             <i className="fa-solid fa-chevron-down" style={{cursor: 'pointer'}} onClick={() => setIsChatOpen(false)}></i>
           </div>
-          <div style={{ flex: 1, padding: '15px', fontSize: '0.8rem', overflowY: 'auto' }}>
-            {isConnected ? `Hello ${walletAddress.substring(0,6)}! Your real-time balance is ${userBalance.toLocaleString()} $ZNTC. I am ready to analyze Base Network trends for you.` : "Please connect your wallet to access personal AI portfolio insights."}
+          <div ref={chatContainerRef} style={{ flex: 1, padding: '15px', fontSize: '0.8rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {chatMessages.map((msg, i) => (
+              <div key={i} style={{ 
+                alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                background: msg.role === 'user' ? 'var(--base-blue)' : 'rgba(255,255,255,0.05)',
+                padding: '8px 12px',
+                borderRadius: '12px',
+                maxWidth: '85%',
+                border: msg.role === 'user' ? 'none' : '1px solid var(--glass-border)',
+                color: '#f8fafc'
+              }}>
+                {msg.content}
+              </div>
+            ))}
           </div>
-          <div style={{ padding: '10px', borderTop: '1px solid var(--glass-border)' }}>
-             <input type="text" placeholder="Ask AI..." style={{ width: '100%', background: '#000', border: '1px solid #333', padding: '8px', borderRadius: '8px', color: 'white' }} />
-          </div>
+          <form onSubmit={handleSendMessage} style={{ padding: '10px', borderTop: '1px solid var(--glass-border)', display: 'flex', gap: '5px' }}>
+             <input 
+              type="text" 
+              placeholder="Ask AI..." 
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              style={{ flex: 1, background: '#000', border: '1px solid #333', padding: '8px', borderRadius: '8px', color: 'white', fontSize: '0.8rem', outline: 'none' }} 
+             />
+             <button type="submit" style={{ background: 'var(--base-blue)', border: 'none', color: 'white', padding: '5px 12px', borderRadius: '8px', cursor: 'pointer' }}>
+                <i className="fa-solid fa-paper-plane"></i>
+             </button>
+          </form>
         </div>
       )}
 
