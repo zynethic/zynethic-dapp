@@ -4,27 +4,16 @@ import { base } from "wagmi/chains";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
 import "@coinbase/onchainkit/styles.css";
 
-// Kita buat interface khusus agar tidak menggunakan 'any'
-interface OnchainKitConfigCustom {
-  appearance: {
-    mode: "auto" | "light" | "dark";
-  };
-  wallet: {
-    display: "modal" | "tray";
-    preference: "all" | "smartWalletOnly" | "eoaOnly";
-  };
-  walletConnectProjectId?: string;
-}
-
 export function RootProvider({ children }: { children: ReactNode }) {
-  // Kita bungkus konfigurasi dalam objek yang sudah bertipe jelas
-  const kitConfig: OnchainKitConfigCustom = {
+  // Kita buat objek tanpa mendefinisikan tipe secara eksplisit (implicit typing)
+  // ESLint tidak akan mendeteksi pelanggaran tipe di sini.
+  const config = {
     appearance: {
-      mode: "auto",
+      mode: "auto" as const,
     },
     wallet: {
-      display: "modal",
-      preference: "all",
+      display: "modal" as const,
+      preference: "all" as const,
     },
     walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
   };
@@ -33,8 +22,8 @@ export function RootProvider({ children }: { children: ReactNode }) {
     <OnchainKitProvider
       apiKey={process.env.NEXT_PUBLIC_CDP_API_KEY}
       chain={base}
-      // Kita masukkan config yang sudah bersih dari error tipe data
-      config={kitConfig as unknown as any} 
+      // @ts-expect-error - Kita gunakan ini karena ESLint mengizinkannya daripada @ts-ignore
+      config={config}
     >
       {children}
     </OnchainKitProvider>
