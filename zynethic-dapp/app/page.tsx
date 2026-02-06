@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'; 
 import { ethers } from 'ethers'; 
 import { getRealBalance, fetchLivePrice, getTotalBurned, ZNTC_CONTRACT_ADDRESS } from '@/lib/calls';
-// Menambahkan import untuk OnchainKit Wallet
 import { Wallet, ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
 import { Identity, Name, Address, Avatar } from '@coinbase/onchainkit/identity';
 import { useAccount } from 'wagmi';
@@ -19,10 +18,8 @@ export default function Page() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [realBurned, setRealBurned] = useState(4000000);
 
-  // Mengambil status akun dari OnchainKit
   const { address, isConnected: isWalletConnected } = useAccount();
 
-  // Effect untuk sinkronisasi status wallet OnchainKit ke state lokal Anda
   useEffect(() => {
     if (isWalletConnected && address) {
       setIsConnected(true);
@@ -45,24 +42,20 @@ export default function Page() {
           value: parseInt(dataSent.data[0].value), 
           label: dataSent.data[0].value_classification 
         });
-
         const price = await fetchLivePrice();
         setLivePrice(price);
-
         const burned = await getTotalBurned();
         setRealBurned(burned);
       } catch (e) {
         console.error("Data fetch error", e);
       }
     };
-
     fetchData();
     const interval = setInterval(fetchData, 15000); 
     return () => clearInterval(interval);
   }, []);
 
   const handleConnect = async () => {
-    // Fungsi ini tetap ada namun sekarang digantikan oleh komponen <Wallet> di UI
     if (typeof window !== 'undefined' && window['ethereum' as keyof typeof window]) {
       try {
         const ethProvider = window['ethereum' as keyof typeof window];
@@ -97,7 +90,6 @@ export default function Page() {
       <style dangerouslySetInnerHTML={{ __html: `
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
-
         :root { --primary-bg: #010409; --base-blue: #0052ff; --base-glow: #00f7ff; --glass-bg: rgba(10, 17, 32, 0.7); --glass-border: rgba(255, 255, 255, 0.1); --pancake-bg: #27262c; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; overflow-x: hidden; background-color: var(--primary-bg); }
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 4%; position: fixed; width: 100%; top: 0; z-index: 1000; background: rgba(1, 4, 9, 0.9); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glass-border); box-sizing: border-box; }
@@ -106,7 +98,6 @@ export default function Page() {
         .main-content { padding: 100px 40px 60px; flex-grow: 1; display: flex; flex-direction: column; width: 100%; box-sizing: border-box; }
         .nav-item { padding: 6px 10px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.8rem; white-space: nowrap; }
         .nav-item:hover, .nav-item.active { background: rgba(0, 82, 255, 0.1); color: var(--base-glow); }
-        /* Style untuk menyesuaikan tombol OnchainKit dengan desain Anda */
         .btn-connect-fixed { padding: 6px 14px !important; font-size: 0.75rem !important; min-width: fit-content; background: var(--base-blue) !important; color: white !important; border-radius: 12px !important; border: none !important; font-weight: 700 !important; }
         .swap-container { background: var(--pancake-bg); border-radius: 24px; padding: 20px; width: 100%; max-width: 420px; margin: 0 auto; border: 1px solid var(--glass-border); box-shadow: 0px 4px 20px rgba(0,0,0,0.5); }
         .swap-input-box { background: #372f47; border-radius: 16px; padding: 16px; margin-bottom: 8px; border: 1px solid transparent; }
@@ -142,7 +133,6 @@ export default function Page() {
         </div>
         <div className="nav-center-wrapper"><div className="nav-links-desktop"><NavItems /></div></div>
         <div style={{ width: '180px', display: 'flex', justifyContent: 'flex-end' }}>
-          {/* Mengganti tombol manual dengan OnchainKit Wallet Component */}
           <Wallet>
             <ConnectWallet className="btn-connect-fixed">
               <Avatar className="h-6 w-6" />
@@ -182,23 +172,23 @@ export default function Page() {
       )}
 
       <main className="main-content">
-        {/* Header Section bergaya Hub/AIxC */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div className="status-pill">PHASE: DEVELOPMENT & PRE-LAUNCH</div>
-          <h1 style={{ margin: '10px 0 10px 0', fontSize: '3rem', fontWeight: 800, letterSpacing: '-1px' }}>ZYNETHIC Hub</h1>
-          <h2 style={{ margin: '0 auto 15px auto', fontSize: '1.4rem', fontWeight: 600, color: '#ffffff', maxWidth: '700px', lineHeight: '1.3' }}>
-            Global AI community token. Building the future of AI + Web3.
-          </h2>
-          <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '15px', maxWidth: '600px', margin: '0 auto 20px auto' }}>
-            The Command Center for real-time AI sentiment analysis, on-chain whale tracking, and predictive competition.
-          </p>
-          <p style={{ color: '#94a3b8', fontSize: '0.75rem' }}>
-            <span className="live-dot"></span> <strong>LIVE:</strong> {lastActivity.addr} | Price: ${livePrice}
-          </p>
-        </div>
-
         {activeTab === 'dashboard' && (
           <>
+            {/* Header Section dipindahkan ke dalam dashboard agar hanya muncul di Dashboard */}
+            <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+              <div className="status-pill">PHASE: DEVELOPMENT & PRE-LAUNCH</div>
+              <h1 style={{ margin: '10px 0 10px 0', fontSize: '3rem', fontWeight: 800, letterSpacing: '-1px' }}>ZYNETHIC Hub</h1>
+              <h2 style={{ margin: '0 auto 15px auto', fontSize: '1.4rem', fontWeight: 600, color: '#ffffff', maxWidth: '700px', lineHeight: '1.3' }}>
+                Global AI community token. Building the future of AI + Web3.
+              </h2>
+              <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '15px', maxWidth: '600px', margin: '0 auto 20px auto' }}>
+                The Command Center for real-time AI sentiment analysis, on-chain whale tracking, and predictive competition.
+              </p>
+              <p style={{ color: '#94a3b8', fontSize: '0.75rem' }}>
+                <span className="live-dot"></span> <strong>LIVE:</strong> {lastActivity.addr} | Price: ${livePrice}
+              </p>
+            </div>
+
             <div className="grid-container">
               <div className="card">
                 <h3><i className="fa-solid fa-gauge-high" style={{ color: '#00f7ff' }}></i> AI Sentiment</h3>
@@ -274,7 +264,6 @@ export default function Page() {
                   </div>
                 </div>
               </div>
-              {/* Tombol swap sekarang otomatis memicu koneksi via Wallet OnchainKit jika belum konek */}
               <button className="btn-primary" style={{ width: '100%', marginTop: '10px', padding: '15px', borderRadius: '16px' }} onClick={() => isConnected ? window.open(`https://app.uniswap.org/#/swap?outputCurrency=${ZNTC_CONTRACT_ADDRESS}&chain=base`, '_blank') : handleConnect()}>
                 {isConnected ? 'SWAP ON UNISWAP' : 'CONNECT WALLET'}
               </button>
@@ -299,7 +288,7 @@ export default function Page() {
         {activeTab === 'leaderboard' && (
           <div className="card">
             <h3><i className="fa-solid fa-trophy"></i> Global Leaderboard</h3>
-            <table className="ai-table">
+            <table className="verify-table ai-table">
               <thead><tr><th>RANK</th><th>WALLET</th><th>BALANCE</th><th>STATUS</th></tr></thead>
               <tbody>
                 {isConnected && userBalance > 0 && (
@@ -325,6 +314,29 @@ export default function Page() {
                     <p style={{ color: '#ff4d4d' }}>[ALERT] {realBurned > 0 ? 'Burning Mechanism Active' : 'Scanning Dead Address...'}</p>
                     <p style={{ color: '#00ff88' }}>[LIVE] Current $ZNTC Price: ${livePrice}</p>
                 </div>
+              </div>
+          </div>
+        )}
+
+        {activeTab === 'tiers' && (
+          <div className="grid-container">
+              <div className="card">
+                <div className="status-pill">TIER 1</div>
+                <h3>BRONZE</h3>
+                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Requirement: 10,000 $ZNTC</p>
+                <ul style={{ fontSize: '0.75rem', color: '#f8fafc', paddingLeft: '20px' }}>
+                  <li>Basic AI Terminal</li>
+                  <li>Security Scan Access</li>
+                </ul>
+              </div>
+              <div className="card">
+                <div className="status-pill">TIER 2</div>
+                <h3>GOLD</h3>
+                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Requirement: 50,000 $ZNTC</p>
+                <ul style={{ fontSize: '0.75rem', color: '#f8fafc', paddingLeft: '20px' }}>
+                  <li>AI Sentiment Analysis</li>
+                  <li>Yield Optimization Quest</li>
+                </ul>
               </div>
           </div>
         )}
