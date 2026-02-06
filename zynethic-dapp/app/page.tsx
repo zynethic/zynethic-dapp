@@ -18,6 +18,11 @@ export default function Page() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [realBurned, setRealBurned] = useState(4000000);
 
+  // Security Scan States
+  const [scanAddress, setScanAddress] = useState('');
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanResult, setScanResult] = useState<any>(null);
+
   const { address, isConnected: isWalletConnected } = useAccount();
 
   useEffect(() => {
@@ -54,6 +59,27 @@ export default function Page() {
     const interval = setInterval(fetchData, 15000); 
     return () => clearInterval(interval);
   }, []);
+
+  const handleSecurityScan = async () => {
+    if (!scanAddress.startsWith('0x') || scanAddress.length !== 42) {
+      alert("Please enter a valid Base contract address.");
+      return;
+    }
+    setIsScanning(true);
+    try {
+      const res = await fetch(`https://api.goplussecurity.com/api/v1/token_security/8453?contract_addresses=${scanAddress}`);
+      const data = await res.json();
+      if (data.result && data.result[scanAddress.toLowerCase()]) {
+        setScanResult(data.result[scanAddress.toLowerCase()]);
+      } else {
+        alert("Scan failed: Address not found on Base.");
+      }
+    } catch (e) {
+      console.error("Scan error", e);
+    } finally {
+      setIsScanning(false);
+    }
+  };
 
   const handleConnect = async () => {
     if (typeof window !== 'undefined' && window['ethereum' as keyof typeof window]) {
@@ -174,7 +200,6 @@ export default function Page() {
       <main className="main-content">
         {activeTab === 'dashboard' && (
           <>
-            {/* Header Section dipindahkan ke dalam dashboard agar hanya muncul di Dashboard */}
             <div style={{ textAlign: 'center', marginBottom: '40px' }}>
               <div className="status-pill">PHASE: DEVELOPMENT & PRE-LAUNCH</div>
               <h1 style={{ margin: '10px 0 10px 0', fontSize: '3rem', fontWeight: 800, letterSpacing: '-1px' }}>ZYNETHIC Hub</h1>
@@ -223,9 +248,32 @@ export default function Page() {
                     <button className="btn-primary" style={{ marginTop: '10px', fontSize: '0.75rem' }}>START QUEST</button>
                     {!hasAccess(50000) && <div className="locked-overlay"><p>GOLD ACCESS ONLY</p></div>}
                 </div>
+                
                 <div className="card">
                     <h3><i className="fa-solid fa-shield-halved"></i> Security Scan AI</h3>
-                    <input type="text" placeholder="Paste Contract Address..." style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white', marginTop: '10px' }} />
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                      <input 
+                        type="text" 
+                        placeholder="Paste Base Contract..." 
+                        value={scanAddress}
+                        onChange={(e) => setScanAddress(e.target.value)}
+                        style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white' }} 
+                      />
+                      <button 
+                        onClick={handleSecurityScan}
+                        disabled={isScanning}
+                        style={{ background: 'var(--base-blue)', border: 'none', padding: '0 15px', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.7rem' }}
+                      >
+                        {isScanning ? '...' : 'SCAN'}
+                      </button>
+                    </div>
+                    {scanResult && (
+                      <div style={{ marginTop: '12px', fontSize: '0.7rem', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '10px', border: '1px solid var(--glass-border)' }}>
+                        <p style={{ margin: '2px 0' }}>Honeypot: <span style={{ color: scanResult.is_honeypot === '1' ? '#ff4d4d' : '#00ff88', fontWeight: 800 }}>{scanResult.is_honeypot === '1' ? 'DANGER' : 'SAFE'}</span></p>
+                        <p style={{ margin: '2px 0' }}>Buy/Sell Tax: {scanResult.buy_tax || '0'}% / {scanResult.sell_tax || '0'}%</p>
+                        <p style={{ margin: '2px 0' }}>Slippage: {scanResult.is_honeypot === '1' ? 'High Risk' : 'Normal'}</p>
+                      </div>
+                    )}
                     {!hasAccess(10000) && <div className="locked-overlay"><p>BRONZE TIER REQUIRED</p></div>}
                 </div>
             </div>
