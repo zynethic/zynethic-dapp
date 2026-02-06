@@ -15,7 +15,8 @@ export function RootProvider({ children }: { children: ReactNode }) {
         },
         wallet: {
           display: "modal",
-          // Hapus walletConnectProjectId dari sini karena menyebabkan error build
+          // Sekarang kita aktifkan kembali karena Project ID sudah ada di Vercel
+          walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID,
           preference: "all", 
         },
       }}
