@@ -49,7 +49,7 @@ export async function POST(req: Request) {
             }
           ],
           generationConfig: {
-            temperature: 0.4, // Suhu rendah (0.4) memastikan AI tetap objektif dan tidak berhalusinasi/spekulasi
+            temperature: 0.4, 
             maxOutputTokens: 800,
             topP: 0.8,
             topK: 40
@@ -64,13 +64,15 @@ export async function POST(req: Request) {
       throw new Error(data.error.message);
     }
 
-    // Mengambil output teks dari struktur respons Gemini 2.0
     const aiText = data.candidates[0].content.parts[0].text;
 
     return NextResponse.json({ text: aiText });
 
-  } catch (error: any) {
-    console.error("ZYNETHIC API Error:", error);
+  } catch (error: unknown) {
+    // Menangani error tanpa menggunakan tipe 'any' untuk mematuhi ESLint
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error("ZYNETHIC API Error:", errorMessage);
+    
     return NextResponse.json(
       { text: "The ZNTC AI core is currently synchronizing with Base Mainnet. Please re-initiate your query shortly." },
       { status: 500 }
