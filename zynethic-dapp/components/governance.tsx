@@ -96,7 +96,7 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
         const errorData = await res.json();
         alert(`Security Block: ${errorData.error}`);
       }
-    } catch (_err) {
+    } catch {
       alert("Connection Error.");
     } finally {
       setLoadingPublish(null);
