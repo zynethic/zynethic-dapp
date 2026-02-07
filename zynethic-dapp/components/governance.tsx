@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const triggerSocialPost = async (proposalId: number) => {
   // LAPIS 1: Verifikasi apakah dompet terkoneksi
   if (!isConnected || !walletAddress) {
