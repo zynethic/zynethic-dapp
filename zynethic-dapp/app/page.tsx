@@ -7,6 +7,7 @@ import { fetchAIResponse } from '@/lib/ai-assistant';
 import { Wallet, ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
 import { Identity, Name, Address, Avatar } from '@coinbase/onchainkit/identity';
 import { useAccount } from 'wagmi';
+import Image from 'next/image';
 
 // IMPORT KOMPONEN BARU
 import Leaderboard from '@/components/leaderboard';
@@ -130,6 +131,7 @@ export default function Page() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleConnect = async () => {
     if (typeof window !== 'undefined' && window['ethereum' as keyof typeof window]) {
       try {
@@ -195,7 +197,7 @@ export default function Page() {
 
       <nav className="navbar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '180px' }}>
-          <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" style={{ width: '28px', height: '28px' }} />
+          <Image src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" width={28} height={28} />
           <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', letterSpacing: '0.5px' }}>ZYNETHIC</div>
         </div>
         <div className="nav-center-wrapper"><div className="nav-links-desktop"><NavItems /></div></div>
@@ -336,7 +338,6 @@ export default function Page() {
           </div>
         )}
 
-        {/* PERUBAHAN DISINI: Memanggil Komponen Governance yang mendukung Social Announcement */}
         {activeTab === 'governance' && (
           <Governance 
             isConnected={isConnected} 
