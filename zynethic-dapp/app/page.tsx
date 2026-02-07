@@ -10,6 +10,7 @@ import { useAccount } from 'wagmi';
 
 // IMPORT KOMPONEN BARU
 import Leaderboard from '@/components/leaderboard';
+import Governance from '@/components/governance';
 
 interface GoPlusScanResult {
   is_honeypot: string;
@@ -335,20 +336,15 @@ export default function Page() {
           </div>
         )}
 
+        {/* PERUBAHAN DISINI: Memanggil Komponen Governance yang mendukung Social Announcement */}
         {activeTab === 'governance' && (
-          <div className="card">
-            <h3><i className="fa-solid fa-vote-yea"></i> Governance & Social</h3>
-            <div style={{ background: 'rgba(29, 155, 240, 0.1)', padding: '15px', borderRadius: '15px', marginTop: '15px' }}>
-                <p style={{ fontSize: '0.8rem' }}><i className="fa-brands fa-twitter"></i> Voting results auto-posted to @zynethic</p>
-            </div>
-            <div style={{ marginTop: '20px', padding: '20px', border: '1px solid var(--base-glow)', borderRadius: '15px' }}>
-                <h4>Presale: Early Bird Access</h4>
-                <button className="btn-primary" style={{ marginTop: '10px' }} onClick={() => isConnected ? alert(`Verifying eligibility for ${walletAddress}...`) : handleConnect()}>CHECK ELIGIBILITY</button>
-            </div>
-          </div>
+          <Governance 
+            isConnected={isConnected} 
+            walletAddress={walletAddress} 
+            userBalance={userBalance} 
+          />
         )}
 
-        {/* PERUBAHAN DISINI: Memanggil Komponen Leaderboard yang baru */}
         {activeTab === 'leaderboard' && (
           <Leaderboard 
             isConnected={isConnected} 
