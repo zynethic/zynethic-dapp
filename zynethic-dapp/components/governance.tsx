@@ -56,7 +56,6 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
     }, 800);
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const triggerSocialPost = async (proposalId: number) => {
     if (!isConnected || !walletAddress) {
       alert("Safety Alert: Please connect your wallet first.");
@@ -97,7 +96,7 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
         const errorData = await res.json();
         alert(`Security Block: ${errorData.error}`);
       }
-    } catch (err) {
+    } catch (_err) {
       alert("Connection Error.");
     } finally {
       setLoadingPublish(null);
