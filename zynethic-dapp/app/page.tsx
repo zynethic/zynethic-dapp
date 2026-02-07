@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react'; // Menambahkan useRef
+import { useState, useEffect, useRef } from 'react';
 import { ethers } from 'ethers'; 
 import { getRealBalance, fetchLivePrice, getTotalBurned, ZNTC_CONTRACT_ADDRESS } from '@/lib/calls';
-import { fetchAIResponse } from '@/lib/ai-assistant'; // Import fungsi AI
+import { fetchAIResponse } from '@/lib/ai-assistant'; 
 import { Wallet, ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
 import { Identity, Name, Address, Avatar } from '@coinbase/onchainkit/identity';
 import { useAccount } from 'wagmi';
 
-// Mendefinisikan interface agar tidak terjadi error linting 'any'
+// IMPORT KOMPONEN BARU
+import Leaderboard from '@/components/leaderboard';
+
 interface GoPlusScanResult {
   is_honeypot: string;
   buy_tax: string;
@@ -27,21 +29,18 @@ export default function Page() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [realBurned, setRealBurned] = useState(4000000);
 
-  // AI Assistant States
   const [chatInput, setChatInput] = useState('');
   const [chatMessages, setChatMessages] = useState([
     { role: 'assistant', content: 'Hello! I am ZNTC AI. How can I help you navigate the Base ecosystem today?' }
   ]);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Security Scan States
   const [scanAddress, setScanAddress] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState<GoPlusScanResult | null>(null);
 
   const { address, isConnected: isWalletConnected } = useAccount();
 
-  // Auto-scroll chat
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -90,20 +89,11 @@ export default function Page() {
     const userMsg = chatInput;
     setChatInput('');
     setChatMessages(prev => [...prev, { role: 'user', content: userMsg }]);
-
-    // Loading State
     setChatMessages(prev => [...prev, { role: 'assistant', content: 'Analyzing Base on-chain data...' }]);
 
     try {
-      const contextData = {
-        livePrice,
-        sentiment: sentiment.label,
-        burned: realBurned,
-        userBalance
-      };
-
+      const contextData = { livePrice, sentiment: sentiment.label, burned: realBurned, userBalance };
       const aiResponse = await fetchAIResponse(userMsg, contextData);
-
       setChatMessages(prev => {
         const newMessages = [...prev];
         newMessages[newMessages.length - 1] = { role: 'assistant', content: aiResponse };
@@ -183,13 +173,6 @@ export default function Page() {
         .nav-item { padding: 6px 10px; border-radius: 10px; cursor: pointer; color: #94a3b8; transition: 0.3s; display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.8rem; white-space: nowrap; }
         .nav-item:hover, .nav-item.active { background: rgba(0, 82, 255, 0.1); color: var(--base-glow); }
         .btn-connect-fixed { padding: 6px 14px !important; font-size: 0.75rem !important; min-width: fit-content; background: var(--base-blue) !important; color: white !important; border-radius: 12px !important; border: none !important; font-weight: 700 !important; }
-        .swap-container { background: var(--pancake-bg); border-radius: 24px; padding: 20px; width: 100%; max-width: 420px; margin: 0 auto; border: 1px solid var(--glass-border); box-shadow: 0px 4px 20px rgba(0,0,0,0.5); }
-        .swap-input-box { background: #372f47; border-radius: 16px; padding: 16px; margin-bottom: 8px; border: 1px solid transparent; }
-        .swap-input-box:focus-within { border-color: var(--base-glow); }
-        .swap-label { color: #b8add2; font-size: 0.75rem; font-weight: 600; margin-bottom: 8px; display: block; }
-        .swap-input-row { display: flex; justify-content: space-between; align-items: center; }
-        .swap-input { background: transparent; border: none; color: white; font-size: 1.5rem; font-weight: 600; width: 60%; outline: none; }
-        .token-select { background: #483f5a; padding: 4px 12px; border-radius: 12px; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
         .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
         .card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; backdrop-filter: blur(10px); position: relative; overflow: hidden; }
         .btn-primary { background: var(--base-blue); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; border-bottom: 3px solid rgba(0,0,0,0.2); }
@@ -211,7 +194,6 @@ export default function Page() {
 
       <nav className="navbar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '180px' }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" style={{ width: '28px', height: '28px' }} />
           <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', letterSpacing: '0.5px' }}>ZYNETHIC</div>
         </div>
@@ -262,13 +244,7 @@ export default function Page() {
             ))}
           </div>
           <form onSubmit={handleSendMessage} style={{ padding: '10px', borderTop: '1px solid var(--glass-border)', display: 'flex', gap: '5px' }}>
-             <input 
-              type="text" 
-              placeholder="Ask AI..." 
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              style={{ flex: 1, background: '#000', border: '1px solid #333', padding: '8px', borderRadius: '8px', color: 'white', fontSize: '0.8rem', outline: 'none' }} 
-             />
+             <input type="text" placeholder="Ask AI..." value={chatInput} onChange={(e) => setChatInput(e.target.value)} style={{ flex: 1, background: '#000', border: '1px solid #333', padding: '8px', borderRadius: '8px', color: 'white', fontSize: '0.8rem', outline: 'none' }} />
              <button type="submit" style={{ background: 'var(--base-blue)', border: 'none', color: 'white', padding: '5px 12px', borderRadius: '8px', cursor: 'pointer' }}>
                 <i className="fa-solid fa-paper-plane"></i>
              </button>
@@ -302,7 +278,6 @@ export default function Page() {
                 </div>
                 {!hasAccess(50000) && <div className="locked-overlay"><p>GOLD TIER REQUIRED</p></div>}
               </div>
-
               <div className="card">
                 <h3><i className="fa-solid fa-robot"></i> Terminal Assistant</h3>
                 <div style={{ background: 'rgba(0,0,0,0.3)', borderRadius: '10px', padding: '15px', height: '80px', fontSize: '0.8rem', overflowY: 'auto' }}>
@@ -327,22 +302,11 @@ export default function Page() {
                     <button className="btn-primary" style={{ marginTop: '10px', fontSize: '0.75rem' }}>START QUEST</button>
                     {!hasAccess(50000) && <div className="locked-overlay"><p>GOLD ACCESS ONLY</p></div>}
                 </div>
-                
                 <div className="card">
                     <h3><i className="fa-solid fa-shield-halved"></i> Security Scan AI</h3>
                     <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
-                      <input 
-                        type="text" 
-                        placeholder="Paste Base Contract..." 
-                        value={scanAddress}
-                        onChange={(e) => setScanAddress(e.target.value)}
-                        style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white' }} 
-                      />
-                      <button 
-                        onClick={handleSecurityScan}
-                        disabled={isScanning}
-                        style={{ background: 'var(--base-blue)', border: 'none', padding: '0 15px', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.7rem' }}
-                      >
+                      <input type="text" placeholder="Paste Base Contract..." value={scanAddress} onChange={(e) => setScanAddress(e.target.value)} style={{ flex: 1, padding: '10px', borderRadius: '8px', border: '1px solid var(--glass-border)', background: 'transparent', color: 'white' }} />
+                      <button onClick={handleSecurityScan} disabled={isScanning} style={{ background: 'var(--base-blue)', border: 'none', padding: '0 15px', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.7rem' }}>
                         {isScanning ? '...' : 'SCAN'}
                       </button>
                     </div>
@@ -350,7 +314,6 @@ export default function Page() {
                       <div style={{ marginTop: '12px', fontSize: '0.7rem', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '10px', border: '1px solid var(--glass-border)' }}>
                         <p style={{ margin: '2px 0' }}>Honeypot: <span style={{ color: scanResult.is_honeypot === '1' ? '#ff4d4d' : '#00ff88', fontWeight: 800 }}>{scanResult.is_honeypot === '1' ? 'DANGER' : 'SAFE'}</span></p>
                         <p style={{ margin: '2px 0' }}>Buy/Sell Tax: {scanResult.buy_tax || '0'}% / {scanResult.sell_tax || '0'}%</p>
-                        <p style={{ margin: '2px 0' }}>Slippage: {scanResult.is_honeypot === '1' ? 'High Risk' : 'Normal'}</p>
                       </div>
                     )}
                     {!hasAccess(10000) && <div className="locked-overlay"><p>BRONZE TIER REQUIRED</p></div>}
@@ -360,41 +323,15 @@ export default function Page() {
         )}
 
         {activeTab === 'swap' && (
-          <div style={{ padding: '40px 0' }}>
-            <div className="swap-container">
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
-                <h3 style={{ margin: 0 }}>Swap</h3>
-                <i className="fa-solid fa-gear" style={{ color: '#b8add2' }}></i>
-              </div>
-              <div className="swap-input-box">
-                <span className="swap-label">From</span>
-                <div className="swap-input-row">
-                  <input type="number" className="swap-input" placeholder="0.0" />
-                  <div className="token-select">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" width="20" alt="eth" /> ETH <i className="fa-solid fa-chevron-down" style={{ fontSize: '0.6rem' }}></i>
-                  </div>
-                </div>
-              </div>
-              <div style={{ textAlign: 'center', margin: '-15px 0', position: 'relative', zIndex: 2 }}>
-                <div style={{ background: '#372f47', width: '32px', height: '32px', borderRadius: '10px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', border: '4px solid var(--pancake-bg)', cursor: 'pointer' }}>
-                  <i className="fa-solid fa-arrow-down" style={{ color: 'var(--base-glow)', fontSize: '0.8rem' }}></i>
-                </div>
-              </div>
-              <div className="swap-input-box" style={{ marginTop: '5px' }}>
-                <span className="swap-label">To</span>
-                <div className="swap-input-row">
-                  <input type="number" className="swap-input" placeholder="0.0" readOnly />
-                  <div className="token-select" style={{ background: 'var(--base-blue)' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" width="20" alt="zntc" /> $ZNTC
-                  </div>
-                </div>
-              </div>
-              <button className="btn-primary" style={{ width: '100%', marginTop: '10px', padding: '15px', borderRadius: '16px' }} onClick={() => isConnected ? window.open(`https://app.uniswap.org/#/swap?outputCurrency=${ZNTC_CONTRACT_ADDRESS}&chain=base`, '_blank') : handleConnect()}>
-                {isConnected ? 'SWAP ON UNISWAP' : 'CONNECT WALLET'}
-              </button>
-            </div>
+          <div style={{ padding: '80px 20px', textAlign: 'center' }}>
+            <div className="status-pill" style={{ marginBottom: '20px' }}>STATION CLOSED</div>
+            <h2 style={{ fontSize: '2rem', marginBottom: '10px' }}>$ZNTC Listing Imminent</h2>
+            <p style={{ color: '#94a3b8', maxWidth: '500px', margin: '0 auto 30px' }}>
+              The ZYNETHIC Swap Engine is currently in stand-by. Native In-App Swap will be activated once $ZNTC Liquidity is deployed on Base Mainnet.
+            </p>
+            <button className="btn-primary" onClick={() => window.open('https://x.com/zynethic', '_blank')}>
+              <i className="fa-brands fa-x-twitter"></i> FOLLOW FOR ANNOUNCEMENT
+            </button>
           </div>
         )}
 
@@ -406,26 +343,18 @@ export default function Page() {
             </div>
             <div style={{ marginTop: '20px', padding: '20px', border: '1px solid var(--base-glow)', borderRadius: '15px' }}>
                 <h4>Presale: Early Bird Access</h4>
-                <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Verified $ZNTC holders on Base Mainnet only.</p>
                 <button className="btn-primary" style={{ marginTop: '10px' }} onClick={() => isConnected ? alert(`Verifying eligibility for ${walletAddress}...`) : handleConnect()}>CHECK ELIGIBILITY</button>
             </div>
           </div>
         )}
 
+        {/* PERUBAHAN DISINI: Memanggil Komponen Leaderboard yang baru */}
         {activeTab === 'leaderboard' && (
-          <div className="card">
-            <h3><i className="fa-solid fa-trophy"></i> Global Leaderboard</h3>
-            <table className="verify-table ai-table">
-              <thead><tr><th>RANK</th><th>WALLET</th><th>BALANCE</th><th>STATUS</th></tr></thead>
-              <tbody>
-                {isConnected && userBalance > 0 && (
-                  <tr><td>-</td><td>{walletAddress.substring(0,6)}...{walletAddress.substring(38)}</td><td>{userBalance.toLocaleString()}</td><td className="trend-up"><i className="fa-solid fa-circle-check"></i> YOU</td></tr>
-                )}
-                <tr><td>1</td><td>0x71...4f</td><td>9,450,000</td><td className="trend-up"><i className="fa-solid fa-circle-check"></i> BASED</td></tr>
-                <tr><td>2</td><td>0x3a...1c</td><td>8,200,000</td><td className="trend-up"><i className="fa-solid fa-circle-check"></i> BASED</td></tr>
-              </tbody>
-            </table>
-          </div>
+          <Leaderboard 
+            isConnected={isConnected} 
+            walletAddress={walletAddress} 
+            userBalance={userBalance} 
+          />
         )}
 
         {activeTab === 'burn' && (
