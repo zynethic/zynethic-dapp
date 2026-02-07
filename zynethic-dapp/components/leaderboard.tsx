@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ethers } from 'ethers';
 import { ZNTC_CONTRACT_ADDRESS } from '@/lib/calls';
 
@@ -10,12 +10,17 @@ interface LeaderboardProps {
   userBalance: number;
 }
 
-export default function Leaderboard({ isConnected, walletAddress, userBalance }: LeaderboardProps) {
-  const [topHolders, setTopHolders] = useState<any[]>([]);
+// Menentukan interface untuk data dari Basescan
+interface HolderData {
+  TokenHolderAddress: string;
+  TokenHolderQuantity: string;
+}
 
-  const fetchLeaderboard = async () => {
+export default function Leaderboard({ isConnected, walletAddress, userBalance }: LeaderboardProps) {
+  const [topHolders, setTopHolders] = useState<{ addr: string; balance: number; status: string }[]>([]);
+
+  const fetchLeaderboard = useCallback(async () => {
     try {
-      // Mengambil API Key dari Environment Variable yang Anda pasang di Vercel
       const BASESCAN_API_KEY = process.env.NEXT_PUBLIC_BASESCAN_API_KEY;
       
       if (!BASESCAN_API_KEY) {
@@ -30,20 +35,23 @@ export default function Leaderboard({ isConnected, walletAddress, userBalance }:
       const data = await response.json();
       
       if (data.status === '1' && data.result) {
-        setTopHolders(data.result.map((holder: any) => ({
-          addr: holder.TokenHolderAddress,
-          balance: parseFloat(ethers.formatUnits(holder.TokenHolderQuantity, 18)),
-          status: parseFloat(ethers.formatUnits(holder.TokenHolderQuantity, 18)) > 1000000 ? 'WHALE' : 'HOLDER'
-        })));
+        setTopHolders(data.result.map((holder: HolderData) => {
+          const balanceNum = parseFloat(ethers.formatUnits(holder.TokenHolderQuantity, 18));
+          return {
+            addr: holder.TokenHolderAddress,
+            balance: balanceNum,
+            status: balanceNum > 1000000 ? 'WHALE' : 'HOLDER'
+          };
+        }));
       }
     } catch (e) {
       console.error("Leaderboard Sync Error:", e);
     }
-  };
+  }, []);
 
   useEffect(() => { 
     fetchLeaderboard(); 
-  }, []);
+  }, [fetchLeaderboard]);
 
   return (
     <div className="card">
@@ -63,7 +71,6 @@ export default function Leaderboard({ isConnected, walletAddress, userBalance }:
           </tr>
         </thead>
         <tbody>
-          {/* Baris User (Tampil jika Wallet Terkoneksi) */}
           {isConnected && (
             <tr style={{ background: 'rgba(0, 82, 255, 0.1)', borderLeft: '4px solid var(--base-glow)' }}>
               <td><i className="fa-solid fa-user-shield"></i></td>
@@ -73,7 +80,6 @@ export default function Leaderboard({ isConnected, walletAddress, userBalance }:
             </tr>
           )}
 
-          {/* Data Holder dari Basescan */}
           {topHolders.length > 0 ? (
             topHolders.map((holder, index) => (
               <tr key={index}>
