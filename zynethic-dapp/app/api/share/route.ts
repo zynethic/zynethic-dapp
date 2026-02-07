@@ -32,11 +32,11 @@ Check: zynethic.xyz #ZYNETHIC #ZNTC #BuildOnBase #AI`;
     await client.v2.tweet(tweetText);
 
     return NextResponse.json({ success: true, message: 'Tweet sent successfully!' });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Twitter API Error:', error);
     return NextResponse.json({ 
       success: false, 
-      error: error.message || 'Failed to send tweet' 
+      error: (error as Error).message || 'Failed to send tweet' 
     }, { status: 500 });
   }
 }
