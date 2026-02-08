@@ -197,7 +197,8 @@ export default function Page() {
 
       <nav className="navbar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', width: '180px' }}>
-          <Image src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" width={28} height={28} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="https://raw.githubusercontent.com/zynethic/zntc-icon/main/zntc.png" alt="ZNTC" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
           <div style={{ fontWeight: 800, fontSize: '1.1rem', color: '#ffffff', letterSpacing: '0.5px' }}>ZYNETHIC</div>
         </div>
         <div className="nav-center-wrapper"><div className="nav-links-desktop"><NavItems /></div></div>
