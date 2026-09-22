@@ -2,6 +2,9 @@ import { ethers } from 'ethers';
 
 export const ZNTC_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_ZNTC_CONTRACT || "0x553E1479999432aBF4D7c4aD613faac6b62Fcb5b";
 
+// Public RPC Base Mainnet agar data publik tetap ter-load tanpa extension wallet
+const BASE_PUBLIC_RPC = "https://mainnet.base.org";
+
 const MINIMAL_ABI = [
   "function balanceOf(address owner) view returns (uint256)",
   "function decimals() view returns (uint8)",
@@ -11,59 +14,60 @@ const MINIMAL_ABI = [
 // Address pembakaran standar (Dead Address)
 const DEAD_ADDRESS = "0x000000000000000000000000000000000000dead";
 
-export const getRealBalance = async (userAddress: string) => {
-  if (typeof window !== 'undefined') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { ethereum } = window as any;
-    
-    if (ethereum) {
-      try {
-        const provider = new ethers.BrowserProvider(ethereum);
-        const contract = new ethers.Contract(ZNTC_CONTRACT_ADDRESS, MINIMAL_ABI, provider);
-        const balance = await contract.balanceOf(userAddress);
-        const decimals = await contract.decimals();
-        return parseFloat(ethers.formatUnits(balance, decimals));
-      } catch (error) {
-        console.error("Error fetching real balance:", error);
-        return 0;
-      }
-    }
+/**
+ * Mendapatkan Provider secara dinamis:
+ * Menggunakan window.ethereum jika ada, atau fallback ke Public RPC Base.
+ */
+const getProvider = () => {
+  if (typeof window !== 'undefined' && (window as unknown as { ethereum?: ethers.Eip1193Provider }).ethereum) {
+    return new ethers.BrowserProvider((window as unknown as { ethereum: ethers.Eip1193Provider }).ethereum);
   }
-  return 0;
+  return new ethers.JsonRpcProvider(BASE_PUBLIC_RPC);
 };
 
-export const fetchLivePrice = async () => {
+export const getRealBalance = async (userAddress: string): Promise<number> => {
+  if (!userAddress || !ethers.isAddress(userAddress)) return 0;
+
   try {
-    // Mengambil data harga real-time dari DexScreener API berdasarkan Contract Address
+    const provider = getProvider();
+    const contract = new ethers.Contract(ZNTC_CONTRACT_ADDRESS, MINIMAL_ABI, provider);
+    
+    const [balance, decimals] = await Promise.all([
+      contract.balanceOf(userAddress),
+      contract.decimals().catch(() => 18) // Default desimal token ERC-20
+    ]);
+
+    return parseFloat(ethers.formatUnits(balance, decimals));
+  } catch (error) {
+    console.error("Error fetching real balance:", error);
+    return 0;
+  }
+};
+
+export const fetchLivePrice = async (): Promise<string> => {
+  try {
     const res = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${ZNTC_CONTRACT_ADDRESS}`);
     const data = await res.json();
-    // Mengambil harga USD dari pair pertama yang ditemukan
     return data.pairs?.[0]?.priceUsd || "0.0000";
-  } catch {
+  } catch (error) {
+    console.error("DexScreener Fetch Error:", error);
     return "0.0000";
   }
 };
 
-/**
- * Fungsi tambahan untuk mendukung fitur "Burn Tracker" di Page.tsx secara nyata.
- * Menghitung jumlah token yang sudah dikirim ke dead address.
- */
-export const getTotalBurned = async () => {
-  if (typeof window !== 'undefined') {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { ethereum } = window as any;
-    if (ethereum) {
-      try {
-        const provider = new ethers.BrowserProvider(ethereum);
-        const contract = new ethers.Contract(ZNTC_CONTRACT_ADDRESS, MINIMAL_ABI, provider);
-        const burnBalance = await contract.balanceOf(DEAD_ADDRESS);
-        const decimals = await contract.decimals();
-        return parseFloat(ethers.formatUnits(burnBalance, decimals));
-      } catch (error) {
-        console.error("Error fetching burn data:", error);
-        return 4000000; // Fallback ke angka rencana burn jika gagal load
-      }
-    }
+export const getTotalBurned = async (): Promise<number> => {
+  try {
+    const provider = getProvider();
+    const contract = new ethers.Contract(ZNTC_CONTRACT_ADDRESS, MINIMAL_ABI, provider);
+    
+    const [burnBalance, decimals] = await Promise.all([
+      contract.balanceOf(DEAD_ADDRESS),
+      contract.decimals().catch(() => 18)
+    ]);
+
+    return parseFloat(ethers.formatUnits(burnBalance, decimals));
+  } catch (error) {
+    console.error("Error fetching burn data:", error);
+    return 4000000; // Fallback jika koneksi RPC terputus
   }
-  return 4000000;
 };
