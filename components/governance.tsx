@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSignMessage } from 'wagmi';
 
 interface GovernanceProps {
   isConnected: boolean;
@@ -11,6 +12,7 @@ interface GovernanceProps {
 export default function Governance({ isConnected, walletAddress, userBalance }: GovernanceProps) {
   const [loadingPublish, setLoadingPublish] = useState<number | null>(null);
   const [votingId, setVotingId] = useState<number | null>(null);
+  const { signMessageAsync } = useSignMessage();
   
   const [proposals, setProposals] = useState([
     {
@@ -39,7 +41,6 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
     }
     
     setVotingId(proposalId);
-    // Simulasi on-chain logic: Menambahkan power berdasarkan balance user
     setTimeout(() => {
       setProposals(prev => prev.map(p => {
         if (p.id === proposalId) {
@@ -75,15 +76,27 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
 
     try {
       const totalVotes = proposal.votesA + proposal.votesB;
+      const resultA = totalVotes > 0 ? ((proposal.votesA / totalVotes) * 100).toFixed(1) : "0.0";
+      const resultB = totalVotes > 0 ? ((proposal.votesB / totalVotes) * 100).toFixed(1) : "0.0";
+
+      // 1. Buat pesan otentikasi unik
+      const message = `ZYNETHIC Governance Announcement Authorization:\nProposal ID: ${proposal.id}\nTimestamp: ${Date.now()}`;
+
+      // 2. Minta tanda tangan digital dari wallet Admin via MetaMask/Coinbase Wallet
+      const signature = await signMessageAsync({ message });
+
+      // 3. Kirim payload beserta signature ke server
       const res = await fetch('/api/share', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           proposalTitle: proposal.title,
-          resultA: ((proposal.votesA / totalVotes) * 100).toFixed(1),
-          resultB: ((proposal.votesB / totalVotes) * 100).toFixed(1),
-          totalVotes: totalVotes,
-          adminAddress: walletAddress 
+          resultA,
+          resultB,
+          totalVotes,
+          adminAddress: walletAddress,
+          signature,
+          message
         }),
       });
 
@@ -96,8 +109,9 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
         const errorData = await res.json();
         alert(`Security Block: ${errorData.error}`);
       }
-    } catch {
-      alert("Connection Error.");
+    } catch (err) {
+      console.error("Publish error:", err);
+      alert("Connection Error or Signature Rejected.");
     } finally {
       setLoadingPublish(null);
     }
@@ -105,62 +119,67 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
 
   return (
     <div className="grid-container">
-      {proposals.map((proposal) => (
-        <div key={proposal.id} className="card">
-          <div className="status-pill">{proposal.status}</div>
-          <h3>{proposal.title}</h3>
-          
-          <div style={{ marginTop: '15px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '5px' }}>
-              <span>YES: {proposal.votesA.toLocaleString()}</span>
-              <span>NO: {proposal.votesB.toLocaleString()}</span>
-            </div>
-            <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
-              <div style={{ 
-                width: `${(proposal.votesA / (proposal.votesA + proposal.votesB)) * 100}%`, 
-                height: '100%', 
-                background: 'var(--base-glow)' 
-              }}></div>
-            </div>
-          </div>
+      {proposals.map((proposal) => {
+        const totalVotes = proposal.votesA + proposal.votesB;
+        const percentA = totalVotes > 0 ? (proposal.votesA / totalVotes) * 100 : 0;
 
-          {/* TOMBOL VOTE UNTUK USER */}
-          <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-            <button 
-              onClick={() => handleUserVote(proposal.id, 'YES')}
-              disabled={votingId === proposal.id}
-              style={{ flex: 1, padding: '10px', borderRadius: '12px', border: '1px solid var(--base-glow)', background: 'transparent', color: 'var(--base-glow)', cursor: 'pointer', fontWeight: 800, fontSize: '0.7rem' }}
-            >
-              VOTE YES
-            </button>
-            <button 
-              onClick={() => handleUserVote(proposal.id, 'NO')}
-              disabled={votingId === proposal.id}
-              style={{ flex: 1, padding: '10px', borderRadius: '12px', border: '1px solid #ff4d4d', background: 'transparent', color: '#ff4d4d', cursor: 'pointer', fontWeight: 800, fontSize: '0.7rem' }}
-            >
-              VOTE NO
-            </button>
-          </div>
-          
-          {/* TOMBOL KHUSUS ADMIN (Hanya muncul untuk Anda) */}
-          {walletAddress.toLowerCase() === "0x553E1479999432aBF4D7c4aD613faac6b62Fcb5b".toLowerCase() && (
-            <button 
-              className="btn-primary" 
-              style={{ marginTop: '12px', width: '100%', fontSize: '0.7rem', background: '#fff', color: '#000' }}
-              onClick={() => triggerSocialPost(proposal.id)}
-              disabled={loadingPublish === proposal.id || proposal.isPublished}
-            >
-              {proposal.isPublished ? 'ANNOUNCED TO X' : loadingPublish === proposal.id ? 'PUBLISHING...' : 'ADMIN: PUBLISH RESULT'}
-            </button>
-          )}
-
-          {!isConnected && (
-            <div className="locked-overlay" style={{ borderRadius: '20px' }}>
-              <p style={{ fontSize: '0.8rem' }}>CONNECT WALLET TO VOTE</p>
+        return (
+          <div key={proposal.id} className="card">
+            <div className="status-pill">{proposal.status}</div>
+            <h3>{proposal.title}</h3>
+            
+            <div style={{ marginTop: '15px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '5px' }}>
+                <span>YES: {proposal.votesA.toLocaleString()}</span>
+                <span>NO: {proposal.votesB.toLocaleString()}</span>
+              </div>
+              <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{ 
+                  width: `${percentA}%`, 
+                  height: '100%', 
+                  background: 'var(--base-glow)' 
+                }}></div>
+              </div>
             </div>
-          )}
-        </div>
-      ))}
+
+            {/* TOMBOL VOTE UNTUK USER */}
+            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+              <button 
+                onClick={() => handleUserVote(proposal.id, 'YES')}
+                disabled={votingId === proposal.id}
+                style={{ flex: 1, padding: '10px', borderRadius: '12px', border: '1px solid var(--base-glow)', background: 'transparent', color: 'var(--base-glow)', cursor: 'pointer', fontWeight: 800, fontSize: '0.7rem' }}
+              >
+                VOTE YES
+              </button>
+              <button 
+                onClick={() => handleUserVote(proposal.id, 'NO')}
+                disabled={votingId === proposal.id}
+                style={{ flex: 1, padding: '10px', borderRadius: '12px', border: '1px solid #ff4d4d', background: 'transparent', color: '#ff4d4d', cursor: 'pointer', fontWeight: 800, fontSize: '0.7rem' }}
+              >
+                VOTE NO
+              </button>
+            </div>
+            
+            {/* TOMBOL KHUSUS ADMIN */}
+            {walletAddress.toLowerCase() === "0x553E1479999432aBF4D7c4aD613faac6b62Fcb5b".toLowerCase() && (
+              <button 
+                className="btn-primary" 
+                style={{ marginTop: '12px', width: '100%', fontSize: '0.7rem', background: '#fff', color: '#000' }}
+                onClick={() => triggerSocialPost(proposal.id)}
+                disabled={loadingPublish === proposal.id || proposal.isPublished}
+              >
+                {proposal.isPublished ? 'ANNOUNCED TO X' : loadingPublish === proposal.id ? 'PUBLISHING...' : 'ADMIN: PUBLISH RESULT'}
+              </button>
+            )}
+
+            {!isConnected && (
+              <div className="locked-overlay" style={{ borderRadius: '20px' }}>
+                <p style={{ fontSize: '0.8rem' }}>CONNECT WALLET TO VOTE</p>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
