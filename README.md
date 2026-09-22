@@ -3,6 +3,7 @@
 ![Framework](https://img.shields.io/badge/Framework-Next.js%2014-black)
 ![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
+
 **ZYNETHIC dApp** adalah antarmuka terdesentralisasi resmi untuk proyek **ZYNETHIC ($ZNTC)** yang berjalan di atas jaringan **Base Mainnet**. Antarmuka ini dirancang untuk menghubungkan ekosistem Web3 dengan kapabilitas Kecerdasan Buatan (AI) terintegrasi.
 - 🌐 **Website:** [zynethic.xyz](https://zynethic.xyz)
 - 🐦 **Twitter / X:** [@zynethic](https://x.com/zynethic)
