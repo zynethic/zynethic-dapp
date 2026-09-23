@@ -7,7 +7,9 @@ import { fetchAIResponse } from '@/lib/ai-assistant';
 import { Wallet, ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
 import { Identity, Name, Address, Avatar } from '@coinbase/onchainkit/identity';
 import { useAccount } from 'wagmi';
-import Image from 'next/image';
+//import Image from 'next/image';
+// 🟢 Ubah menjadi seperti ini:
+import _Image from 'next/image';
 
 // IMPORT KOMPONEN BARU
 import Leaderboard from '@/components/leaderboard';
