@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useSignMessage } from 'wagmi';
+import styles from './governance.module.css';
 
 interface GovernanceProps {
   isConnected: boolean;
@@ -13,45 +14,46 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
   const [loadingPublish, setLoadingPublish] = useState<number | null>(null);
   const [votingId, setVotingId] = useState<number | null>(null);
   const { signMessageAsync } = useSignMessage();
-  
+
   const [proposals, setProposals] = useState([
     {
       id: 1,
-      title: "Integrate ZNTC with Base AI Agents",
+      title: 'Integrate ZNTC with Base AI Agents',
       votesA: 150000,
       votesB: 2000,
       isPublished: false,
-      status: "Active"
+      status: 'Active',
     },
     {
       id: 2,
-      title: "Global AI Awareness Campaign",
+      title: 'Global AI Awareness Campaign',
       votesA: 85000,
       votesB: 500,
       isPublished: false,
-      status: "Active"
-    }
+      status: 'Active',
+    },
   ]);
 
-  // FUNGSI UNTUK USER MELAKUKAN VOTE
   const handleUserVote = async (proposalId: number, type: 'YES' | 'NO') => {
     if (!isConnected) {
-      alert("Please connect your wallet to vote.");
+      alert('Please connect your wallet to vote.');
       return;
     }
-    
+
     setVotingId(proposalId);
     setTimeout(() => {
-      setProposals(prev => prev.map(p => {
-        if (p.id === proposalId) {
-          return {
-            ...p,
-            votesA: type === 'YES' ? p.votesA + userBalance : p.votesA,
-            votesB: type === 'NO' ? p.votesB + userBalance : p.votesB
-          };
-        }
-        return p;
-      }));
+      setProposals((prev) =>
+        prev.map((p) => {
+          if (p.id === proposalId) {
+            return {
+              ...p,
+              votesA: type === 'YES' ? p.votesA + userBalance : p.votesA,
+              votesB: type === 'NO' ? p.votesB + userBalance : p.votesB,
+            };
+          }
+          return p;
+        })
+      );
       setVotingId(null);
       alert(`Success! You voted ${type} with ${userBalance.toLocaleString()} $ZNTC power.`);
     }, 800);
@@ -59,13 +61,13 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
 
   const triggerSocialPost = async (proposalId: number) => {
     if (!isConnected || !walletAddress) {
-      alert("Safety Alert: Please connect your wallet first.");
+      alert('Safety Alert: Please connect your wallet first.');
       return;
     }
 
-    const ADMIN_WALLET = "0x553E1479999432aBF4D7c4aD613faac6b62Fcb5b";
+    const ADMIN_WALLET = '0x553E1479999432aBF4D7c4aD613faac6b62Fcb5b';
     if (walletAddress.toLowerCase() !== ADMIN_WALLET.toLowerCase()) {
-      alert("Critical Security: Only ZYNETHIC Global AI Admin can execute this.");
+      alert('Critical Security: Only ZYNETHIC Global AI Admin can execute this.');
       return;
     }
 
@@ -76,16 +78,12 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
 
     try {
       const totalVotes = proposal.votesA + proposal.votesB;
-      const resultA = totalVotes > 0 ? ((proposal.votesA / totalVotes) * 100).toFixed(1) : "0.0";
-      const resultB = totalVotes > 0 ? ((proposal.votesB / totalVotes) * 100).toFixed(1) : "0.0";
+      const resultA = totalVotes > 0 ? ((proposal.votesA / totalVotes) * 100).toFixed(1) : '0.0';
+      const resultB = totalVotes > 0 ? ((proposal.votesB / totalVotes) * 100).toFixed(1) : '0.0';
 
-      // 1. Buat pesan otentikasi unik
       const message = `ZYNETHIC Governance Announcement Authorization:\nProposal ID: ${proposal.id}\nTimestamp: ${Date.now()}`;
-
-      // 2. Minta tanda tangan digital dari wallet Admin via MetaMask/Coinbase Wallet
       const signature = await signMessageAsync({ message });
 
-      // 3. Kirim payload beserta signature ke server
       const res = await fetch('/api/share', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -96,22 +94,22 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
           totalVotes,
           adminAddress: walletAddress,
           signature,
-          message
+          message,
         }),
       });
 
       if (res.ok) {
-        setProposals((prev) => prev.map((p) => 
-          p.id === proposalId ? { ...p, isPublished: true } : p
-        ));
-        alert("Success! Global AI Community Announcement posted to @zynethic.");
+        setProposals((prev) =>
+          prev.map((p) => (p.id === proposalId ? { ...p, isPublished: true } : p))
+        );
+        alert('Success! Global AI Community Announcement posted to @zynethic.');
       } else {
         const errorData = await res.json();
         alert(`Security Block: ${errorData.error}`);
       }
     } catch (err) {
-      console.error("Publish error:", err);
-      alert("Connection Error or Signature Rejected.");
+      console.error('Publish error:', err);
+      alert('Connection Error or Signature Rejected.');
     } finally {
       setLoadingPublish(null);
     }
@@ -127,54 +125,51 @@ export default function Governance({ isConnected, walletAddress, userBalance }: 
           <div key={proposal.id} className="card">
             <div className="status-pill">{proposal.status}</div>
             <h3>{proposal.title}</h3>
-            
-            <div style={{ marginTop: '15px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '5px' }}>
+
+            <div className={styles.voteContainer}>
+              <div className={styles.voteStats}>
                 <span>YES: {proposal.votesA.toLocaleString()}</span>
                 <span>NO: {proposal.votesB.toLocaleString()}</span>
               </div>
-              <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ 
-                  width: `${percentA}%`, 
-                  height: '100%', 
-                  background: 'var(--base-glow)' 
-                }}></div>
+              <div className={styles.progressBarBg}>
+                <div className={styles.progressBarFill} style={{ width: `${percentA}%` }}></div>
               </div>
             </div>
 
-            {/* TOMBOL VOTE UNTUK USER */}
-            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-              <button 
+            <div className={styles.buttonGroup}>
+              <button
                 onClick={() => handleUserVote(proposal.id, 'YES')}
                 disabled={votingId === proposal.id}
-                style={{ flex: 1, padding: '10px', borderRadius: '12px', border: '1px solid var(--base-glow)', background: 'transparent', color: 'var(--base-glow)', cursor: 'pointer', fontWeight: 800, fontSize: '0.7rem' }}
+                className={styles.btnVoteYes}
               >
                 VOTE YES
               </button>
-              <button 
+              <button
                 onClick={() => handleUserVote(proposal.id, 'NO')}
                 disabled={votingId === proposal.id}
-                style={{ flex: 1, padding: '10px', borderRadius: '12px', border: '1px solid #ff4d4d', background: 'transparent', color: '#ff4d4d', cursor: 'pointer', fontWeight: 800, fontSize: '0.7rem' }}
+                className={styles.btnVoteNo}
               >
                 VOTE NO
               </button>
             </div>
-            
-            {/* TOMBOL KHUSUS ADMIN */}
-            {walletAddress.toLowerCase() === "0x553E1479999432aBF4D7c4aD613faac6b62Fcb5b".toLowerCase() && (
-              <button 
-                className="btn-primary" 
-                style={{ marginTop: '12px', width: '100%', fontSize: '0.7rem', background: '#fff', color: '#000' }}
+
+            {walletAddress.toLowerCase() === '0x553e1479999432abf4d7c4ad613faac6b62fcb5b' && (
+              <button
+                className={`btn-primary ${styles.btnAdminPublish}`}
                 onClick={() => triggerSocialPost(proposal.id)}
                 disabled={loadingPublish === proposal.id || proposal.isPublished}
               >
-                {proposal.isPublished ? 'ANNOUNCED TO X' : loadingPublish === proposal.id ? 'PUBLISHING...' : 'ADMIN: PUBLISH RESULT'}
+                {proposal.isPublished
+                  ? 'ANNOUNCED TO X'
+                  : loadingPublish === proposal.id
+                  ? 'PUBLISHING...'
+                  : 'ADMIN: PUBLISH RESULT'}
               </button>
             )}
 
             {!isConnected && (
               <div className="locked-overlay" style={{ borderRadius: '20px' }}>
-                <p style={{ fontSize: '0.8rem' }}>CONNECT WALLET TO VOTE</p>
+                <p>CONNECT WALLET TO VOTE</p>
               </div>
             )}
           </div>
