@@ -1,6 +1,13 @@
+/* -------------------------------------------------------------------------- */
+/* 1. IMPORTS (Harus selalu di bagian paling atas file)                     */
+/* -------------------------------------------------------------------------- */
+@import '@coinbase/onchainkit/styles.css';
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css');
 
+/* -------------------------------------------------------------------------- */
+/* 2. ROOT VARIABLES & GLOBAL RESET                                           */
+/* -------------------------------------------------------------------------- */
 :root {
   --primary-bg: #010409;
   --base-blue: #0052ff;
@@ -32,6 +39,9 @@ a {
   text-decoration: none;
 }
 
+/* -------------------------------------------------------------------------- */
+/* 3. LAYOUT & UTILITY CLASSES                                                */
+/* -------------------------------------------------------------------------- */
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -120,4 +130,44 @@ a {
   100% {
     opacity: 0.4;
   }
+}
+
+/* -------------------------------------------------------------------------- */
+/* 4. ONCHAINKIT WALLET MODAL & BUTTON STYLING OVERRIDES                       */
+/* -------------------------------------------------------------------------- */
+[data-ock-theme] {
+  --ock-font-family: 'Plus Jakarta Sans', sans-serif !important;
+  --ock-bg-default: #0a1120 !important;
+  --ock-bg-default-hover: #131d31 !important;
+  --ock-bg-default-active: #0052ff !important;
+  --ock-text-default: #ffffff !important;
+  --ock-text-inverse: #000000 !important;
+  --ock-text-foreground-muted: #94a3b8 !important;
+  --ock-border-radius: 16px !important;
+  --ock-border-line-default: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Modal Container Dialog */
+dialog[data-ock-modal] {
+  background: rgba(1, 4, 9, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 10px 40px rgba(0, 247, 255, 0.15) !important;
+}
+
+/* Custom styling untuk Connect Button */
+.ock-connect-wallet-btn {
+  background-color: var(--base-blue) !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  padding: 8px 16px !important;
+  transition: all 0.3s ease !important;
+}
+
+.ock-connect-wallet-btn:hover {
+  background-color: #0040cc !important;
+  box-shadow: 0 0 15px rgba(0, 82, 255, 0.5) !important;
 }
