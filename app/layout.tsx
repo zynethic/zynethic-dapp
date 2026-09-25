@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Source_Code_Pro } from "next/font/google";
-import { RootProvider } from "./rootProvider";
+import RootProvider from "./rootProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -14,17 +14,8 @@ const sourceCodePro = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "ZYNETHIC DApp",
-  description: "Global AI community token. Building the future of AI + Web3.",
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png" },
-    ],
-  },
+  title: "ZYNETHIC | Global AI Community Token",
+  description: "Building the future of AI + Web3 on Base Network.",
 };
 
 export default function RootLayout({
@@ -34,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${sourceCodePro.variable}`}>
+      <body className={`${inter.variable} ${sourceCodePro.variable} antialiased`}>
         <RootProvider>{children}</RootProvider>
       </body>
     </html>
