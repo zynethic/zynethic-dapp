@@ -2,8 +2,18 @@
 
 import React from 'react';
 import styles from './Navbar.module.css';
-import { Wallet, ConnectWallet, WalletDropdown, WalletDropdownDisconnect } from '@coinbase/onchainkit/wallet';
-import { Identity, Name, Address, Avatar } from '@coinbase/onchainkit/identity';
+import {
+  ConnectWallet,
+  Wallet,
+  WalletDropdown,
+  WalletDropdownDisconnect,
+} from '@coinbase/onchainkit/wallet';
+import {
+  Address,
+  Avatar,
+  Name,
+  Identity,
+} from '@coinbase/onchainkit/identity';
 
 interface NavbarProps {
   activeTab: string;
@@ -61,7 +71,7 @@ export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
 
         <div className={styles.walletWrapper}>
           <Wallet>
-            <ConnectWallet className={styles.btnConnectFixed}>
+            <ConnectWallet className="ock-connect-wallet-btn">
               <Avatar className="h-6 w-6" />
               <Name />
             </ConnectWallet>
