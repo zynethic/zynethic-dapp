@@ -1,0 +1,110 @@
+.aiFab {
+  position: fixed;
+  bottom: 85px;
+  right: 20px;
+  width: 55px;
+  height: 55px;
+  background: var(--base-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 999;
+  border: 2px solid var(--base-glow);
+  box-shadow: 0 4px 15px rgba(0, 247, 255, 0.3);
+}
+
+.chatBox {
+  position: fixed;
+  bottom: 150px;
+  right: 20px;
+  width: 320px;
+  height: 400px;
+  background: #010409;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.chatHeader {
+  background: rgba(0, 82, 255, 0.1);
+  padding: 15px;
+  font-weight: 800;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.chatHeaderIcon {
+  color: var(--base-glow);
+}
+
+.messagesContainer {
+  flex: 1;
+  padding: 15px;
+  font-size: 0.8rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.userMsg {
+  align-self: flex-end;
+  background: var(--base-blue);
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 85%;
+  color: #f8fafc;
+}
+
+.assistantMsg {
+  align-self: flex-start;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: 12px;
+  max-width: 85%;
+  border: 1px solid var(--glass-border);
+  color: #f8fafc;
+}
+
+.chatForm {
+  padding: 10px;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  gap: 5px;
+}
+
+.inputField {
+  flex: 1;
+  background: #000000;
+  border: 1px solid #333333;
+  padding: 8px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.submitBtn {
+  background: var(--base-blue);
+  border: none;
+  color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .aiFab {
+    bottom: 80px;
+    width: 50px;
+    height: 50px;
+  }
+}
