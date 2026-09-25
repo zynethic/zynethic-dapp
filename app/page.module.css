@@ -1,39 +1,99 @@
-.container {
-  display: grid;
-  grid-template-rows: auto 1fr;
+.wrapper {
+  margin: 0;
+  padding: 0;
+  background-color: var(--primary-bg);
   min-height: 100vh;
-}
-
-.headerWrapper {
-  display: flex;
-  justify-content: flex-end;
-  padding: 1rem;
-}
-
-.content {
+  color: #f8fafc;
   display: flex;
   flex-direction: column;
+  position: relative;
+}
+
+.mainContent {
+  padding: 100px 40px 60px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.heroSection {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.heroTitle {
+  margin: 10px 0;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.heroSubtitle {
+  margin: 0 auto 15px auto;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  max-width: 700px;
+  line-height: 1.3;
+}
+
+.heroDescription {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  max-width: 600px;
+  margin: 0 auto 20px auto;
+}
+
+.heroLiveText {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+.chartCard {
+  margin-top: 20px;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+}
+
+.chartIcon {
+  color: var(--base-glow);
+  margin-right: 10px;
+}
+
+.chartContainer {
+  width: 100%;
+  height: 200px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  margin-top: 15px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: 5vh;
+  overflow: hidden;
 }
 
-.title {
-  font-size: clamp(2rem, 8vw, 80px);
-  font-weight: 500;
-  letter-spacing: -0.02em;
+.chartIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
-.componentsTitle {
-  font-weight: 600;
-  margin-top: 2rem;
+.footer {
+  margin-top: auto;
+  padding: 40px 0 30px;
+  text-align: center;
+  font-size: 0.65rem;
+  color: #444444;
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
 }
 
-.components {
-  list-style-type: disc;
-  margin-top: 0.75rem;
-}
-
-.components a:hover {
-  text-decoration: underline;
+@media (max-width: 768px) {
+  .mainContent {
+    padding: 80px 15px 120px;
+  }
 }
