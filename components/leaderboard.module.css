@@ -1,0 +1,66 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.liveBadge {
+  font-size: 0.6rem;
+  color: #00ff88;
+  border: 1px solid #00ff88;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.table th {
+  text-align: left;
+  color: #94a3b8;
+  font-size: 0.7rem;
+  padding: 10px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.table td {
+  padding: 12px 10px;
+  font-size: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.userRow {
+  background: rgba(0, 82, 255, 0.1);
+  border-left: 4px solid var(--base-glow);
+}
+
+.mono {
+  font-family: monospace;
+  opacity: 0.7;
+}
+
+.statusPill {
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.whalePill {
+  border: 1px solid var(--base-glow);
+  color: var(--base-glow);
+}
+
+.holderPill {
+  border: 1px solid #333333;
+  color: #94a3b8;
+}
+
+.loadingCell {
+  text-align: center;
+  padding: 20px;
+  color: #555555;
+}
