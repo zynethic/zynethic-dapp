@@ -2,27 +2,43 @@ import { NextResponse } from 'next/server';
 import { TwitterApi } from 'twitter-api-v2';
 import { verifyMessage } from 'viem';
 
-// Alamat Admin resmi ZYNETHIC
 const AUTHORIZED_ADMIN = "0x553E1479999432aBF4D7c4aD613faac6b62Fcb5b";
 
 export async function POST(req: Request) {
   try {
     const { proposalTitle, resultA, resultB, totalVotes, adminAddress, signature, message } = await req.json();
 
-    // KEAMANAN LAPIS 1: Verifikasi Alamat Admin
+    // SECURE LAYER 1: Admin Address Enforcement
     if (!adminAddress || adminAddress.toLowerCase() !== AUTHORIZED_ADMIN.toLowerCase()) {
-      console.warn(`Unauthorized attempt from: ${adminAddress}`);
       return NextResponse.json(
-        { success: false, error: "Access Denied: Only ZYNETHIC Admin can perform this action." },
+        { success: false, error: "Access Denied: Unauthorized entity." },
         { status: 403 }
       );
     }
 
-    // KEAMANAN LAPIS 2: Verifikasi Kriptografi (Cryptographic Signature)
+    // SECURE LAYER 2: Cryptographic Signature & Replay Prevention
     if (!signature || !message) {
       return NextResponse.json(
-        { success: false, error: "Access Denied: Missing cryptographic signature or message." },
+        { success: false, error: "Access Denied: Cryptographic proof missing." },
         { status: 401 }
+      );
+    }
+
+    // Anti-Replay Check: Validate timestamp in message body (Max age: 5 minutes)
+    const timestampMatch = message.match(/Timestamp:\s*(\d+)/);
+    if (timestampMatch) {
+      const msgTimestamp = parseInt(timestampMatch[1], 10);
+      const currentTime = Date.now();
+      if (isNaN(msgTimestamp) || currentTime - msgTimestamp > 300000) {
+        return NextResponse.json(
+          { success: false, error: "Access Denied: Signature expired (Replay Attack Protection)." },
+          { status: 401 }
+        );
+      }
+    } else {
+      return NextResponse.json(
+        { success: false, error: "Access Denied: Malformed authentication message." },
+        { status: 400 }
       );
     }
 
@@ -34,12 +50,12 @@ export async function POST(req: Request) {
 
     if (!isValid) {
       return NextResponse.json(
-        { success: false, error: "Access Denied: Invalid signature provided." },
+        { success: false, error: "Access Denied: Invalid signature verification." },
         { status: 401 }
       );
     }
 
-    // KEAMANAN LAPIS 3: Validasi Ketersediaan API Keys
+    // SECURE LAYER 3: Twitter API Credentials Check
     if (
       !process.env.TWITTER_CONSUMER_KEY ||
       !process.env.TWITTER_CONSUMER_SECRET ||
@@ -47,7 +63,7 @@ export async function POST(req: Request) {
       !process.env.TWITTER_ACCESS_SECRET
     ) {
       return NextResponse.json(
-        { success: false, error: "Server Configuration Error: Twitter API Keys missing." },
+        { success: false, error: "Service configuration error: Credentials uninitialized." },
         { status: 500 }
       );
     }
@@ -65,12 +81,12 @@ export async function POST(req: Request) {
 
     await client.v2.tweet(tweetText);
 
-    return NextResponse.json({ success: true, message: 'Tweet sent successfully!' });
+    return NextResponse.json({ success: true, message: 'Broadcast successful!' });
   } catch (error: unknown) {
-    console.error('Twitter API Error:', error);
+    console.error('Twitter API Error:', error instanceof Error ? error.message : "Unknown error");
     return NextResponse.json({ 
       success: false, 
-      error: (error as Error).message || 'Failed to send tweet' 
+      error: 'Execution failed due to API rate limits or security parameters.' 
     }, { status: 500 });
   }
 }
