@@ -1,0 +1,49 @@
+.scanContainer {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.scanInput {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: #ffffff;
+  outline: none;
+}
+
+.scanBtn {
+  background: var(--base-blue);
+  border: none;
+  padding: 0 15px;
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.7rem;
+}
+
+.resultCard {
+  margin-top: 12px;
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+}
+
+.resultText {
+  margin: 2px 0;
+}
+
+.safeStatus {
+  color: #00ff88;
+  font-weight: 800;
+}
+
+.dangerStatus {
+  color: #ff4d4d;
+  font-weight: 800;
+}
